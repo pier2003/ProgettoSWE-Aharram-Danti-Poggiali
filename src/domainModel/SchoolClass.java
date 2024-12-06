@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class SchoolClass {
 	private String className;
+	
 
 	public SchoolClass(String className) {
 		this.className = className;

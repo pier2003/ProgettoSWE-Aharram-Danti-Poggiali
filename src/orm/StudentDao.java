@@ -2,6 +2,7 @@ package orm;
 
 import java.util.Iterator;
 
+import domainModel.SchoolClass;
 import domainModel.Student;
 
 public interface StudentDao {
@@ -10,6 +11,6 @@ public interface StudentDao {
 	
 	Student getStudentById(int id) throws StudentDaoException, DaoConnectionException;
 
-	Iterator<Student> getStudentsByClass(String schoolClass_name) throws StudentDaoException, DaoConnectionException;
+	Iterator<Student> getStudentsByClass(SchoolClass schoolClass) throws StudentDaoException, DaoConnectionException;
 
 }

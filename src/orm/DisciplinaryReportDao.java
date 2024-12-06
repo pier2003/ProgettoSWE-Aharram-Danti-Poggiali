@@ -13,4 +13,7 @@ public interface DisciplinaryReportDao {
 	
 	Iterator<DisciplinaryReport> getDisciplinaryReportsByStudent(Student student) throws DisciplinaryReportException, DaoConnectionException;
 
+	void deleteReport(DisciplinaryReport report);
+
+
 }

@@ -3,12 +3,18 @@ package businessLogic;
 import java.time.LocalDate;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import daoFactory.DaoFactory;
 import domainModel.Absence;
+import domainModel.DisciplinaryReport;
+import domainModel.Grade;
 import domainModel.Homework;
 import domainModel.Lesson;
+import domainModel.Meeting;
+import domainModel.MeetingAvailability;
 import domainModel.SchoolClass;
 import domainModel.Student;
 import domainModel.Teacher;
@@ -22,33 +28,50 @@ import orm.LessonDaoException;
 import orm.SchoolClassDaoException;
 import orm.StudentDaoException;
 import orm.TeacherDaoException;
+import strategyForGrade.GradeAverageStrategy;
 
 public class TeacherController {
 
 	private DaoFactory daoFactory;
 	private Teacher teacher;
 
-	public TeacherController(int id, DaoFactory daoFactory) throws StudentDaoException, TeacherDaoException, DaoConnectionException {
+	public TeacherController(Teacher teacher, DaoFactory daoFactory) throws StudentDaoException, TeacherDaoException, DaoConnectionException {
+		this.teacher = teacher;
 		this.daoFactory = daoFactory;
-		this.teacher = daoFactory.creatTeacherDao().getTeacherById(id);
 	}
 
-	public Teacher viewTeacher() {
+	public Teacher getTeacher() {
 		return teacher;
 	}
+	
+	//TEACHINGS
+	
+	public Iterator<TeachingAssignment> getAllMyTeachings(){
+		return daoFactory.createTeachingAssignmentDao().getAllTeacherTeachings(teacher);
+	}
+	
+	
+	
+	//SCHOOLCLASS
 
-	public Iterator<SchoolClass> getAllMyClasses() throws SchoolClassDaoException, DaoConnectionException {
-		return daoFactory.createSchoolClassDao().getAllSchoolClassesByTeacher(teacher);
+	public Iterator<SchoolClass> getClassByTeaching(TeachingAssignment teachingAssignment) throws SchoolClassDaoException, DaoConnectionException {
+		return daoFactory.createSchoolClassDao().getAllSchoolClassesByTeaching(teachingAssignment);
 	}
 
-	public Iterator<Student> getStudentsByClass(String schoolClassName) throws StudentDaoException, DaoConnectionException {
-		return daoFactory.createStudentDao().getStudentsByClass(schoolClassName);
+	
+	//STUDENTS
+	
+	public Iterator<Student> getStudentsByClass(SchoolClass schoolClass) throws StudentDaoException, DaoConnectionException {
+		return daoFactory.createStudentDao().getStudentsByClass(schoolClass);
 	}
 
-	public Student getStudentById(int id) throws StudentDaoException, DaoConnectionException {
-		return daoFactory.createStudentDao().getStudentById(id);
+	
+	//GRADES
+	
+	public Iterator<Grade> getAllStudentGradesByTeaching(Student student, TeachingAssignment teaching) throws GradeDaoException, DaoConnectionException {
+		return daoFactory.createGradeDao().getStudentGradesByTeaching(student, teaching);
 	}
-
+	
 	public void assignGradeToStudentInDate(double value, String description, TeachingAssignment teaching, Student student, LocalDate date)
 			throws GradeDaoException, InvalidGradeValueException, DaoConnectionException {
 		if (value >= 1 && value <= 10) {
@@ -71,41 +94,57 @@ public class TeacherController {
 		}
 	}
 
-	public void editGradeValueById(int id, double value) throws GradeDaoException, DaoConnectionException {
-		daoFactory.createGradeDao().editGradeValue(id, value);
+	public void editGradeValue(Grade oldGrade, double value) throws GradeDaoException, DaoConnectionException {
+		daoFactory.createGradeDao().editGradeValue(oldGrade, value);
 	}
 
-	public void editGradeWeightById(int id, int weight) throws GradeDaoException, DaoConnectionException {
-		daoFactory.createGradeDao().editGradeWeight(id, weight);
+	public void editGradeWeight(Grade oldGrade, int weight) throws GradeDaoException, DaoConnectionException {
+		daoFactory.createGradeDao().editGradeWeight(oldGrade, weight);
 	}
 
-	public void editGradeDescriptionById(int id, String description) throws GradeDaoException, DaoConnectionException {
-		daoFactory.createGradeDao().editGradeDescription(id, description);
+	public void editGradeDescription(Grade oldGrade, String description) throws GradeDaoException, DaoConnectionException {
+		daoFactory.createGradeDao().editGradeDescription(oldGrade, description);
+	}
+	
+	public void deleteGrade(Grade grade) throws GradeDaoException, DaoConnectionException {
+		daoFactory.createGradeDao().deleteGrade(grade);
+	}
+	
+	public double calculateStudentTeachingGradeAverage(Student student, TeachingAssignment teaching, GradeAverageStrategy gradeAverageStrategy) throws GradeDaoException, DaoConnectionException {
+		return gradeAverageStrategy.getAverage(getAllStudentGradesByTeaching(student, teaching));
 	}
 
+	
+	//REPORTS
+	
+	public Iterator<DisciplinaryReport> getStudentDisciplinaryReports(Student student) throws DisciplinaryReportException, DaoConnectionException{
+		return daoFactory.createDisciplinaryReportDao().getDisciplinaryReportsByStudent(student);	
+	}
+	
 	public void assignDisciplinaryReportToStudentInDate(Student student, String description, LocalDate date) throws DisciplinaryReportException, DaoConnectionException {
 		daoFactory.createDisciplinaryReportDao().addNewReport(teacher, student, description, date);
 	}
+	
+	public void deleteDisciplinaryReport(DisciplinaryReport report) throws IllegalReportAccessException {
+			if (report.getTeacher().equals(teacher)) {
+				daoFactory.createDisciplinaryReportDao().deleteReport(report);
+			}
+			else {
+				throw new IllegalReportAccessException();
+			}
+	}
+	
+	//ABSENCES
 
 	public Iterator<Absence> getAbsencesByClassInDate(SchoolClass schoolClass, LocalDate date) throws AbsenceDaoException, DaoConnectionException {
 		return daoFactory.createAbsenceDao().getAbsencesByClassInDate(schoolClass, date);
-	}
-
-	public int getNumberOfAbsencesByClassInDate(SchoolClass schoolClass, LocalDate date) throws AbsenceDaoException, DaoConnectionException {
-		Iterator<Absence> absences = getAbsencesByClassInDate(schoolClass, date);
-		int cont = 0;
-		while (absences.hasNext()) {
-			absences.next();
-			cont++;
-		}
-		return cont;
 	}
 
 	public Iterator<Absence> getAbsencesByStudent(Student student) throws AbsenceDaoException, DaoConnectionException {
 		return daoFactory.createAbsenceDao().getAbsencesByStudent(student);
 	}
 
-	public void assignAbsenceToStudentOnDate(Student student, LocalDate date) throws AbsenceDaoException, DaoConnectionException {
+	public void assignAbsenceToStudentInDate(Student student, LocalDate date) throws AbsenceDaoException, DaoConnectionException {
 		daoFactory.createAbsenceDao().addAbsence(student, date);
 	}
 
@@ -113,48 +152,133 @@ public class TeacherController {
 		daoFactory.createAbsenceDao().deleteAbsence(student, date);
 	}
 
+	
+	//HOMEWORKS
+	
 	public void assignNewHomework(TeachingAssignment teaching, LocalDate date, String description,
 			LocalDate subissionDate) throws HomeworkDaoException {
 		daoFactory.createHomeworkDao().addHomework(teaching, date, description, subissionDate);
 	}
 
+	public void editHomeworkDescription(Homework homework, String description)
+			throws HomeworkDaoException, IllegalHomeworkAccessException {
+		if (homework.getTeaching().getTeacher().equals(teacher)) {
+			daoFactory.createHomeworkDao().editHomeworkDescription(homework, description);
+		}
+		else {
+			throw new IllegalHomeworkAccessException();
+		}
+	}
+	
+	public void editHomeworkSubmissionDate(Homework homework, LocalDate date)
+			throws HomeworkDaoException, IllegalHomeworkAccessException {
+		if (homework.getTeaching().getTeacher().equals(teacher)) {
+			daoFactory.createHomeworkDao().editHomeworkSubmissionDate(homework, date);
+		}
+		else {
+			throw new IllegalHomeworkAccessException();
+		}
+	}
+
+	public Iterator<Homework> getClassHomeworksSubmissionDate(LocalDate date, SchoolClass schoolClass) throws DaoConnectionException, HomeworkDaoException {
+		return daoFactory.createHomeworkDao().getHomeworksBySubmissionDate(date, schoolClass);
+	}
+	
+	public void deleteHomework(Homework homework) throws IllegalHomeworkAccessException {
+		if (homework.getTeaching().getTeacher().equals(teacher)) {
+			daoFactory.createHomeworkDao().deleteHomework(homework);
+		}
+		else {
+			throw new IllegalHomeworkAccessException();
+		}
+	}
+	
+	//LESSONS
+	
 	public void addNewLesson(TeachingAssignment teaching, LocalDate date, String description, LocalTime startHour,
 			LocalTime endHour) throws LessonDaoException, DaoConnectionException {
 		daoFactory.createLessonDao().addLesson(teaching, date, description, startHour, endHour);
 	}
 
-	public void editHomeworkDescription(Homework homework, String description)
-			throws HomeworkDaoException {
-		daoFactory.createHomeworkDao().editHomeworkDescription(homework.getId(), description);
+	public void editLessonDescription(Lesson lesson, String description) throws LessonDaoException, DaoConnectionException, IllegalLessonAccessException {
+		if (lesson.getTeaching().getTeacher().equals(teacher)) {
+			daoFactory.createLessonDao().editLessonDescription(lesson, description);
+		}
+		else {
+			throw new IllegalLessonAccessException();
+		}
 	}
 	
-	public void editHomeworkSubmissionDate(Homework homework, LocalDate date)
-			throws HomeworkDaoException {
-		daoFactory.createHomeworkDao().editHomeworkSubmissionDate(homework.getId(), date);
-	}
-
-
-	public void editLessonDescription(Lesson lesson, String description) throws LessonDaoException, DaoConnectionException {
-		daoFactory.createLessonDao().editLessonDescription(lesson.getId(), description);
-	}
-	
-	public void editLessonDateTime(Lesson lesson, LocalDate date, LocalTime startHour, LocalTime endHour) throws LessonDaoException, DaoConnectionException {
-		daoFactory.createLessonDao().editLessonDateTime(lesson.getId(), date, startHour, endHour);
+	public void editLessonDateTime(Lesson lesson, LocalDate date, LocalTime startHour, LocalTime endHour) throws LessonDaoException, DaoConnectionException, IllegalLessonAccessException {
+		if (lesson.getTeaching().getTeacher().equals(teacher)) {
+			daoFactory.createLessonDao().editLessonDateTime(lesson, date, startHour, endHour);
+		}
+		else {
+			throw new IllegalLessonAccessException();
+		}
 	}
 	
 
-	public Iterator<Homework> getHomeworksInDay(LocalDate date, SchoolClass schoolClass) throws DaoConnectionException, HomeworkDaoException {
-		return daoFactory.createHomeworkDao().getHomeworksInDay(date, schoolClass.getClassName());
-	}
-
-	public Iterator<Lesson> getLessonsInDay(LocalDate date, SchoolClass schoolClass) throws DaoConnectionException, LessonDaoException {
-		return daoFactory.createLessonDao().getLessonsInDay(date, schoolClass.getClassName());
+	public Iterator<Lesson> getClassLessonsInDay(LocalDate date, SchoolClass schoolClass) throws DaoConnectionException, LessonDaoException {
+		return daoFactory.createLessonDao().getLessonsInDay(date, schoolClass);
 	}
 	
-	// TODO parte dei colloqui
+	public void deleteLesson(Lesson lesson) throws IllegalHomeworkAccessException {
+		if (lesson.getTeaching().getTeacher().equals(teacher)) {
+			daoFactory.createLessonDao().deleteLesson(lesson);
+		}
+		else {
+			throw new IllegalHomeworkAccessException();
+		}
+	}
+	
+	
+	//MEETING
 	
 	public void addNewMeetingAvailabilityInDate(LocalDate date) {
-		daoFactory.createMeetingAvailabilityDao().addMeetingAvailabilityInDate(teacher.getId(), date);
+		daoFactory.createMeetingAvailabilityDao().addMeetingAvailabilityInDate(teacher, date);
+	}
+	
+	public Iterator<MeetingAvailability> getMeetingAvailabilities(){
+		List<MeetingAvailability> unboockedMeetings = new ArrayList<MeetingAvailability>();
+		Iterator<MeetingAvailability> allMeetings =  daoFactory.createMeetingAvailabilityDao().getAllMeetingsAvaialabilityByTeacher(teacher);
+		while (allMeetings.hasNext()) {
+			MeetingAvailability meetingAvailability = allMeetings.next();
+			if (!meetingAvailability.isBooked()) {
+				unboockedMeetings.add(meetingAvailability);
+			}
+		}
+		return unboockedMeetings.iterator();
+	}
+	
+	public Iterator<Meeting> getBookedMeetings(){
+		return daoFactory.createMeetingDao().getMeetingsByTeacher(teacher);
+	}
+	
+	public void deleteMeetingAvailability(MeetingAvailability meetingAvailability) throws MeetingAlreadyBookedException {
+		if (!meetingAvailability.isBooked()) {
+			daoFactory.createMeetingAvailabilityDao().deleteMeetingAvailability(meetingAvailability);
+		}
+		else {
+			throw new MeetingAlreadyBookedException();
+		}
 	}
 
+	
+	private class MeetingAlreadyBookedException extends Exception {
+		private static final long serialVersionUID = 1L;
+	}
+	
+	private class IllegalHomeworkAccessException extends Exception {
+		private static final long serialVersionUID = 1L;
+	}
+	
+	
+	private class IllegalLessonAccessException extends Exception {
+		private static final long serialVersionUID = 1L;
+	}
+	
+	private class IllegalReportAccessException extends Exception {
+		private static final long serialVersionUID = 1L;
+	}
 }

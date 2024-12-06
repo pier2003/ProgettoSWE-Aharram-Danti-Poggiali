@@ -9,7 +9,7 @@ public class Student {
 	private int id;
 	private SchoolClass schoolClass;
 
-	public Student(String name, String surname, int id, SchoolClass schoolClass) {
+	public Student(int id, String name, String surname, SchoolClass schoolClass) {
 		this.name = name;
 		this.surname = surname;
 		this.id = id;

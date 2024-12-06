@@ -6,6 +6,7 @@ import orm.GradeDao;
 import orm.HomeworkDao;
 import orm.LessonDao;
 import orm.MeetingAvailabilityDao;
+import orm.MeetingDao;
 import orm.ParentDao;
 import orm.SchoolClassDao;
 import orm.StudentDao;
@@ -24,4 +25,5 @@ public interface DaoFactory {
 	ParentDao createParentDao();
 	TeachingAssignmentDao createTeachingAssignmentDao();
 	MeetingAvailabilityDao createMeetingAvailabilityDao();
+	MeetingDao createMeetingDao();
 }

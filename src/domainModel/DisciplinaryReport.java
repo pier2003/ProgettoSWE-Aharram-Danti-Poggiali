@@ -8,8 +8,10 @@ public class DisciplinaryReport {
 	private Teacher teacher;
 	private LocalDate date;
 	private String description;
+	private int id;
 
-	public DisciplinaryReport(Student student, Teacher teacher, LocalDate date, String description) {
+	public DisciplinaryReport(int id, Student student, Teacher teacher, LocalDate date, String description) {
+		this.id = id;
 		this.student = student;
 		this.teacher = teacher;
 		this.date = date;
@@ -48,6 +50,10 @@ public class DisciplinaryReport {
 		DisciplinaryReport other = (DisciplinaryReport) obj;
 		return Objects.equals(date, other.date) && Objects.equals(description, other.description)
 				&& Objects.equals(student, other.student) && Objects.equals(teacher, other.teacher);
+	}
+
+	public int getId() {
+		return id;
 	}
 	
 	
