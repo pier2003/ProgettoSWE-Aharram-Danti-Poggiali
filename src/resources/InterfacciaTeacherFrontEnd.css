@@ -1,0 +1,85 @@
+/* Stile di base per tutti i bottoni */
+.button {
+    -fx-font-size: 14px;
+    -fx-font-family: "Arial";
+    -fx-padding: 10 20;
+    -fx-background-color: linear-gradient(#5499c7   , #5499c7);
+    -fx-background-radius: 5;
+    -fx-border-color: #000;
+    -fx-border-radius: 5;
+    -fx-border-width: 2;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 4, 0, 2, 2);
+    -fx-cursor: hand;
+}
+
+/* Stile al passaggio del mouse */
+.button:hover {
+    -fx-background-color: linear-gradient(#85c1e9, #85c1e9);
+    -fx-border-color: #000;
+}
+
+/* Stile quando il bottone è premuto */
+.button:pressed {
+    -fx-background-color: linear-gradient(#7fb3d5, #7fb3d5);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 2, 0, 1, 1);
+    -fx-translate-y: 2; /* Simula un effetto "premuto" */
+}
+
+/* Bottone disabilitato */
+.button:disabled {
+    -fx-background-color: #BDBDBD;
+    -fx-border-color: #9E9E9E;
+    -fx-text-fill: #757575;
+    -fx-effect: none;
+}
+
+
+
+/* Stile di base per ChoiceBox */
+.choice-box {
+    -fx-font-size: 14px;
+    -fx-font-family: "Arial";
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-border-color: #1E88E5;
+    -fx-border-radius: 5;
+    -fx-border-width: 2;
+    -fx-padding: 5 10;
+    -fx-text-fill: #424242;
+}
+
+.choice-box:hover {
+    -fx-border-color: #1565C0;
+}
+
+.choice-box:focused {
+    -fx-border-color: #42A5F5;
+    -fx-background-color: #E3F2FD;
+}
+
+/* Stile per l'elenco dropdown */
+.choice-box-popup {
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-border-color: #1E88E5;
+    -fx-border-radius: 5;
+    -fx-padding: 5;
+}
+
+.choice-box .list-cell {
+    -fx-font-size: 14px;
+    -fx-font-family: "Arial";
+    -fx-padding: 5 10;
+    -fx-text-fill: #424242;
+}
+
+.choice-box .list-cell:hover {
+    -fx-background-color: #BBDEFB;
+    -fx-text-fill: #0D47A1;
+}
+
+.choice-box .list-cell:focused {
+    -fx-background-color: #90CAF9;
+    -fx-text-fill: #0D47A1;
+}

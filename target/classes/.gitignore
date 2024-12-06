@@ -1,0 +1,11 @@
+/businessLogic/
+/daoFactory/
+/domainModel/
+/gui/
+/module-info.class
+/orm/
+/resources/
+/strategyForGrade/
+/testDaoFactory/
+/testDomainModel/
+/utils/
