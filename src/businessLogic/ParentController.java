@@ -40,15 +40,13 @@ public class ParentController {
 			throws StudentDaoException, SchoolClassDaoException, DaoConnectionException, ParentDaoException {
 		this.parent = parent;
 		this.daoFactory = daoFactory;
-		ParentDao parentDao = daoFactory.createParentDao();
-		Student student = parentDao.getStudentOfParent(parent);
+		Student student = parent.getStudent();
 		studentController = new StudentController(student, daoFactory);
 	}
 
 	public Parent getParent() {
 		return parent;
 	}
-
 	
 	//SCHOOLCLASS
 	
