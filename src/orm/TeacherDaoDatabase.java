@@ -28,9 +28,9 @@ public class TeacherDaoDatabase implements TeacherDao {
 			if(!rs.next())
 				throw new TeacherDaoException("Teacher with id " + id + "dosen't exist.");
 			
-			return new Teacher(rs.getString("name"), 
+			return new Teacher(rs.getInt("id_teacher"), 
 					rs.getString("surname"), 
-					rs.getInt("id_teacher"));
+					rs.getString("name"));
 		} catch (SQLException e) {
 			throw new TeacherDaoException("Database error while fetching teachers data.");
 		}

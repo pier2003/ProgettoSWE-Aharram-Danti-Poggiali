@@ -42,52 +42,55 @@ public class DisciplinaryReportDaoDatabase implements DisciplinaryReportDao {
 	}
 
 	@Override
-	public Iterator<DisciplinaryReport> getDisciplinaryReportsByStudent(Student student) throws DisciplinaryReportException, DaoConnectionException {
-		ArrayList<DisciplinaryReport> reports = new ArrayList<DisciplinaryReport>();
-		
-		checkStudentExist(student);
-		
-		String query = "SELECT * FROM Reports WHERE id_student = ?";
-		
-		try {
-			PreparedStatement stmt = conn.prepareStatement(query);
-			stmt.setInt(1, student.getId());
-			ResultSet rs = stmt.executeQuery();
-			
-			while(rs.next()) {
-				String descrption = rs.getString("description");
-				int id_teacher = rs.getInt("id_teacher");
-				Teacher teacher = getTeacherById(id_teacher);
-				LocalDate date = LocalDate.parse(rs.getString("date"));
-				reports.add(new DisciplinaryReport(student, teacher, date, descrption));
-			}
-				
-		} catch (SQLException e) {
-			throw new DisciplinaryReportException("Database error while processing");
-		}
-		
-		return reports.iterator();
-	}
-	
-	Teacher getTeacherById(int id_teacher) throws DisciplinaryReportException {
-		try {
-			return new TeacherDaoDatabase(conn).getTeacherById(id_teacher);
-		} catch (TeacherDaoException e) {
-			throw new DisciplinaryReportException("Teacher dosen't exist.");
-		} catch (DaoConnectionException e) {
-			throw new DisciplinaryReportException("Connection failed.");
-		}
+	public Iterator<DisciplinaryReport> getDisciplinaryReportsByStudent(Student student) 
+	        throws DisciplinaryReportException, DaoConnectionException {
+	    ArrayList<DisciplinaryReport> reports = new ArrayList<>();
+	    TeacherDaoDatabase teacherDaoDatabase = new TeacherDaoDatabase(conn);
+
+	    checkStudentExist(student);
+
+	    String query = "SELECT * FROM Reports WHERE id_student = ?";
+
+	    try (PreparedStatement stmt = conn.prepareStatement(query)) {
+	        stmt.setInt(1, student.getId());
+
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            while (rs.next()) {
+	                int idReport = rs.getInt("id_report");
+	                String description = rs.getString("description");
+	                int idTeacher = rs.getInt("id_teacher");
+	                Teacher teacher = teacherDaoDatabase.getTeacherById(idTeacher);
+	                LocalDate date = LocalDate.parse(rs.getString("date"));
+	                
+	                reports.add(new DisciplinaryReport(idReport, student, teacher, date, description));
+	            }
+	        }
+	    } catch (SQLException | TeacherDaoException e) {
+	        throw new DisciplinaryReportException("Database error while processing");
+	    }
+	    return reports.iterator();
 	}
 
-	void checkStudentExist(Student student) throws DaoConnectionException, DisciplinaryReportException {
+	
+	
+	
+	
+	
+	@Override
+	public void deleteReport(DisciplinaryReport report) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+
+	private void checkStudentExist(Student student) throws DisciplinaryReportException {
 		StudentDaoDatabase studentDaoDatabase = new StudentDaoDatabase(conn);
 		try {
 			studentDaoDatabase.getStudentById(student.getId());
 		} catch (StudentDaoException e) {
 			throw new DisciplinaryReportException("Student doesn't exist.");
-		} catch (DaoConnectionException e) {
-			throw new DisciplinaryReportException("Connection failed.");
 		}
 	}
+
 
 }

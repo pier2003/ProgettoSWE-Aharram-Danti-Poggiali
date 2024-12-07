@@ -38,7 +38,6 @@ public class StudentController {
 		return student;
 	}
 	
-	
 	//CLASS
 	
 	public SchoolClass getSchoolClass() throws SchoolClassDaoException, DaoConnectionException {
