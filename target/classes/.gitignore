@@ -1,32 +1,6 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-/orm/
 /businessLogic/
-/gui/
-=======
-/businessLogic/
-<<<<<<< HEAD
-/orm/
-=======
 /domainModel/
 /orm/
 /testDaoFactory/
 /testDomainModel/
 /utils/
-/daoFactory/
->>>>>>> branch 'main' of https://github.com/pier2003/ProgettoSWE-Aharram-Danti-Poggiali.git
->>>>>>> ec81d593a7d13b1c932986e1ced4c2655231014e
-=======
-/businessLogic/
-<<<<<<< HEAD
-/orm/
-=======
-/domainModel/
-/orm/
-/testDaoFactory/
-/testDomainModel/
-/utils/
-/daoFactory/
->>>>>>> branch 'main' of https://github.com/pier2003/ProgettoSWE-Aharram-Danti-Poggiali.git
-/strategyForGrade/
->>>>>>> 4d708451b73a6d697331d87a4274d5b47d59c5ab
