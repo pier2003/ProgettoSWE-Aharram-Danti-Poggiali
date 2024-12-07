@@ -19,7 +19,7 @@ public class StudentDaoDatabase implements StudentDao {
 		this.conn = conn;
 	}
 
-	public Student getStudentById(int id) throws StudentDaoException, DaoConnectionException {
+	public Student getStudentById(int id) throws StudentDaoException {
 	    String query = "SELECT * FROM Students WHERE id_student = ?";
 	    try (PreparedStatement stmt = conn.prepareStatement(query)) {
 	        stmt.setInt(1, id);

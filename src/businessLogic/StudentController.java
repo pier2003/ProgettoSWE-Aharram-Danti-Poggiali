@@ -96,7 +96,7 @@ public class StudentController {
 		return daoFactory.createAbsenceDao().getAbsencesByStudent(student);
 	}
  	
-	public boolean checkStudentAttendanceInDay(LocalDate date) throws AbsenceDaoException {
+	public boolean checkStudentAttendanceInDay(LocalDate date) throws AbsenceDaoException, DaoConnectionException {
 		return daoFactory.createAbsenceDao().checkStudentAttendanceInDay(student, date);
 	}
 

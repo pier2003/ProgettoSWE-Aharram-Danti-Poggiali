@@ -128,11 +128,11 @@ public class ParentController {
 		return studentController.getAllStudentAbsences();
 	}
 
-	public void justifyAbsence(Absence absence) {
+	public void justifyAbsence(Absence absence) throws AbsenceDaoException {
 		daoFactory.createAbsenceDao().justifyAbsence(absence);
 	}
 	
-	public boolean checkStudentAttendanceInDay(LocalDate date) throws AbsenceDaoException {
+	public boolean checkStudentAttendanceInDay(LocalDate date) throws AbsenceDaoException, DaoConnectionException {
 		return studentController.checkStudentAttendanceInDay(date);
 	}
 

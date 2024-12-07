@@ -205,7 +205,7 @@ public class AbsenceDaoDatabaseTest {
 	
 
 	@Test
-	public void testCheckStudentAttendanceInDay() throws AbsenceDaoException {
+	public void testCheckStudentAttendanceInDay() throws AbsenceDaoException, DaoConnectionException {
 	    LocalDate existingAbsenceDate = absence.getDate();
 	    LocalDate nonExistingAbsenceDate = LocalDate.of(2023, 10, 10);
 	    
@@ -219,6 +219,29 @@ public class AbsenceDaoDatabaseTest {
 	    Student nonExistentStudent = new Student(-1, "Inesistente", "Studente", student.getSchoolClass());
 
 	    assertThatThrownBy(() -> absenceDao.checkStudentAttendanceInDay(nonExistentStudent, LocalDate.of(2023, 11, 3)))
+	        .isInstanceOf(AbsenceDaoException.class);
+	}
+
+	@Test
+	public void testJustifyAbsence() throws SQLException, AbsenceDaoException, DaoConnectionException {
+	    absenceDao.justifyAbsence(absence);
+	    
+	    String selectAbsenceQuery = "SELECT justification FROM Absences WHERE id_student = ? AND date = ?";
+	    try (PreparedStatement stmt = conn.prepareStatement(selectAbsenceQuery)) {
+	        stmt.setInt(1, absence.getStudent().getId());
+	        stmt.setDate(2, Date.valueOf(absence.getDate()));
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            assertThat(rs.next()).isTrue(); 
+	            assertThat(rs.getBoolean("justification")).isTrue(); 
+	        }
+	    }
+	}
+
+	@Test
+	public void testJustifyAbsence_ThrowsExceptionForNonExistentAbsence() {
+	    Absence nonExistentAbsence = new Absence(student, LocalDate.of(2023, 11, 10), false);
+
+	    assertThatThrownBy(() -> absenceDao.justifyAbsence(nonExistentAbsence))
 	        .isInstanceOf(AbsenceDaoException.class);
 	}
 

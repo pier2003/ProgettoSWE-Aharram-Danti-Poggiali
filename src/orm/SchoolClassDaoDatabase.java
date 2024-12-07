@@ -20,7 +20,7 @@ public class SchoolClassDaoDatabase implements SchoolClassDao {
 	}
 
 	@Override
-	public SchoolClass getSchoolClassByName(String name) throws SchoolClassDaoException, DaoConnectionException {
+	public SchoolClass getSchoolClassByName(String name) throws SchoolClassDaoException {
 		String query = "SELECT * FROM Classes WHERE name = '" + name + "';";
 		try {
 			ResultSet rs = getResultsFromDB(query);
@@ -37,7 +37,7 @@ public class SchoolClassDaoDatabase implements SchoolClassDao {
 
 
 	@Override
-	public SchoolClass getSchoolClassByStudent(Student student) throws SchoolClassDaoException, DaoConnectionException {
+	public SchoolClass getSchoolClassByStudent(Student student) throws SchoolClassDaoException {
 		String query = "SELECT * FROM Students WHERE id_student = " + student.getId() + ";";
 		try {
 			ResultSet rs = getResultsFromDB(query);
@@ -52,7 +52,7 @@ public class SchoolClassDaoDatabase implements SchoolClassDao {
 		}
 	}
 
-	private ResultSet getResultsFromDB(String query) throws SQLException, DaoConnectionException {
+	private ResultSet getResultsFromDB(String query) throws SQLException {
 		PreparedStatement stmt = conn.prepareStatement(query);
 		ResultSet rs = stmt.executeQuery();
 		return rs;
