@@ -38,13 +38,11 @@ public class GradeAvarageStrategyTest {
 	private TeachingAssignment teachingAssignment;
 	private Teacher teacher;
 	private TeacherController teacherController;
-	private GradeAverageStrategy gradeAverageStrategyMock;
 
-	@Before 
+	@Before
 	public void setup() throws DaoConnectionException, StudentDaoException, SchoolClassDaoException, TeacherDaoException {
 		factoryMock = createMock(DaoFactory.class);
 		gradeDaoMock = createMock(GradeDao.class);
-		gradeAverageStrategyMock = createMock(GradeAverageStrategy.class);
 		
 		schoolClass = new SchoolClass("1A");
 		student = new Student(1, "Mario", "Rossi", schoolClass);
@@ -55,7 +53,6 @@ public class GradeAvarageStrategyTest {
 		teacherController = new TeacherController(teacher, factoryMock);
 		
 		expect(factoryMock.createGradeDao()).andReturn(gradeDaoMock).anyTimes();        
-		
 	}
 	
 	@Test
@@ -208,16 +205,19 @@ public class GradeAvarageStrategyTest {
 		Grade g1 = new Grade(0, student, teachingAssignment, null, 8, 1, null);
 		Grade g2 = new Grade(0, student, teachingAssignment, null, 7, 1, null);
 		Grade g3 = new Grade(0, student, teachingAssignment, null, 9, 1, null);
+		grades.add(g1);
+		grades.add(g2);
+		grades.add(g3);
         Iterator<Grade> gradesIterator = grades.iterator();
 
-        expect(gradeAverageStrategyMock.getAverage(gradesIterator)).andReturn(8.0).once();
         expect(gradeDaoMock.getStudentGradesByTeaching(student, teachingAssignment)).andReturn(gradesIterator).once();
-        replay(factoryMock, gradeDaoMock, gradeAverageStrategyMock);
+        
+        replay(factoryMock, gradeDaoMock);
 
-        double average = teacherController.calculateStudentTeachingGradeAverage(student, teachingAssignment, gradeAverageStrategyMock);
+		double average = teacherController.calculateStudentTeachingGradeAverage(student, teachingAssignment, new ArithmeticGradeAverageStrategy());
 
         assertThat(average).isEqualTo(8.0);
 
-        verify(factoryMock, gradeDaoMock, gradeAverageStrategyMock);
+        verify(factoryMock, gradeDaoMock);
     }
 }
