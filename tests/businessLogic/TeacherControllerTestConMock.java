@@ -202,7 +202,7 @@ public class TeacherControllerTestConMock {
 	public void testGetClassByTeaching()
 			throws SchoolClassDaoException, DaoConnectionException, StudentDaoException, TeacherDaoException {
 		Iterator<SchoolClass> classesIterator = classes.iterator();
-		TeachingAssignment teachingAssignment = teachingAssignment1;
+		TeachingAssignment teachingAssignment = teachingAssignment1; 
 
 		expect(schoolClassDaoMock.getAllSchoolClassesByTeaching(teachingAssignment)).andReturn(classesIterator).once();
 
