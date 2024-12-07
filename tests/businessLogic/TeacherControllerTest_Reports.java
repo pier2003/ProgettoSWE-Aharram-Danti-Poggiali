@@ -93,7 +93,7 @@ public class TeacherControllerTest_Reports {
 	}
 
 	@Test
-	public void testdeleteDisciplinaryReport() throws IllegalReportAccessException {
+	public void testdeleteDisciplinaryReport() throws IllegalReportAccessException, DisciplinaryReportException {
 		disciplinaryReportDaoMock.deleteReport(report1);
 
 		replay(factoryMock, disciplinaryReportDaoMock);

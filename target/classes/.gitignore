@@ -1,6 +1,10 @@
 /businessLogic/
+/daoFactory/
 /domainModel/
+/gui/
 /orm/
+/resources/
+/strategyForGrade/
 /testDaoFactory/
 /testDomainModel/
 /utils/

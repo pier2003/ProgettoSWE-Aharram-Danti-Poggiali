@@ -121,7 +121,7 @@ public class TeacherController {
 		daoFactory.createDisciplinaryReportDao().addNewReport(teacher, student, description, date);
 	}
 	
-	public void deleteDisciplinaryReport(DisciplinaryReport report) throws IllegalReportAccessException {
+	public void deleteDisciplinaryReport(DisciplinaryReport report) throws IllegalReportAccessException, DisciplinaryReportException {
 			if (report.getTeacher().equals(teacher)) {
 				daoFactory.createDisciplinaryReportDao().deleteReport(report);
 			}
