@@ -196,7 +196,7 @@ public class TeacherControllerTestConMock {
 				teachingAssignment2);
 
 		verify(factoryMock, teachingAssignmentDaoMock);
-	}
+	} 
  
 	@Test
 	public void testGetClassByTeaching()
