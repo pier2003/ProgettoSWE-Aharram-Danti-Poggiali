@@ -36,6 +36,7 @@ public class AbsenceDaoDatabase implements AbsenceDao {
 	        throw new AbsenceDaoException("Database error while inserting absence.");
 	    }
 	}
+	
 
 	@Override
 	public void deleteAbsence(Student student, LocalDate date) throws AbsenceDaoException, DaoConnectionException {
@@ -138,8 +139,6 @@ public class AbsenceDaoDatabase implements AbsenceDao {
 			studentDaoDatabase.getStudentById(student.getId());
 		} catch (StudentDaoException e) {
 			throw new AbsenceDaoException("Student doesn't exist.");
-		} catch (DaoConnectionException e) {
-			throw new AbsenceDaoException("Connection failed.");
 		}
 	}
 
@@ -152,14 +151,12 @@ public class AbsenceDaoDatabase implements AbsenceDao {
 		}
 	}
 
-	Student getStudentById(int studentId) throws AbsenceDaoException {
+	Student getStudentById(int studentId) throws AbsenceDaoException, DaoConnectionException {
 		StudentDaoDatabase studentDaoDatabase = new StudentDaoDatabase(conn);
 		try {
 			return studentDaoDatabase.getStudentById(studentId);
 		} catch (StudentDaoException e) {
 			throw new AbsenceDaoException("Student doesn't exist.");
-		} catch (DaoConnectionException e) {
-			throw new AbsenceDaoException("Connection failed.");
 		}
 	}
 

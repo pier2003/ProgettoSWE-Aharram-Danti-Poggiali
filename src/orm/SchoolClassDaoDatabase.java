@@ -10,6 +10,7 @@ import java.util.List;
 import domainModel.SchoolClass;
 import domainModel.Student;
 import domainModel.Teacher;
+import domainModel.TeachingAssignment;
 
 public class SchoolClassDaoDatabase implements SchoolClassDao {
 	private Connection conn;
@@ -23,30 +24,17 @@ public class SchoolClassDaoDatabase implements SchoolClassDao {
 		String query = "SELECT * FROM Classes WHERE name = '" + name + "';";
 		try {
 			ResultSet rs = getResultsFromDB(query);
-			rs.next();
-			return new SchoolClass(rs.getString("name"));
-		} catch (SQLException e) {
-			throw new SchoolClassDaoException();
-		}
-	}
-
-	@Override
-	public Iterator<SchoolClass> getAllSchoolClassesByTeacher(Teacher teacher)
-			throws SchoolClassDaoException, DaoConnectionException {
-		List<SchoolClass> teachers = new ArrayList<SchoolClass>();
-		String query = "SELECT * FROM Teachings teachings ,Teachers teachers where teachers.id_teacher = teachings.id_teacher and teachings.id_teacher = "
-				+ teacher.getId() + ";";
-
-		try {
-			ResultSet rs = getResultsFromDB(query);
-			while (rs.next()) {
-				teachers.add(new SchoolClass(rs.getString("class_name")));
+			if (rs.next()) {
+				return new SchoolClass(rs.getString("name"));
 			}
-			return teachers.iterator();
+			else {
+				throw new SchoolClassDaoException();
+			}
 		} catch (SQLException e) {
 			throw new SchoolClassDaoException();
 		}
 	}
+
 
 	@Override
 	public SchoolClass getSchoolClassByStudent(Student student) throws SchoolClassDaoException, DaoConnectionException {
@@ -68,5 +56,12 @@ public class SchoolClassDaoDatabase implements SchoolClassDao {
 		PreparedStatement stmt = conn.prepareStatement(query);
 		ResultSet rs = stmt.executeQuery();
 		return rs;
+	}
+
+	@Override
+	public Iterator<SchoolClass> getAllSchoolClassesByTeaching(TeachingAssignment teachingAssignment)
+			throws SchoolClassDaoException, DaoConnectionException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

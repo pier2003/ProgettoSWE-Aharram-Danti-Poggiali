@@ -35,8 +35,6 @@ public class AbsenceDaoDatabaseTest {
 		absenceDao = new AbsenceDaoDatabase(conn);
 
 		createTestData();
-		
-		
 	}
 	
 	private void createTestData() throws SQLException {
@@ -68,7 +66,7 @@ public class AbsenceDaoDatabaseTest {
 	        stmt.setInt(3, studentId);
 	        stmt.executeUpdate();
 	    }
-	    
+
 	    absence = new Absence(student, LocalDate.of(2023, 11, 3), false);
 	}
 	
@@ -101,6 +99,13 @@ public class AbsenceDaoDatabaseTest {
 		}
 	}
 	
+	@Test
+	public void testAddAbsence_ThrowsExceptionForNonExistentStudent() {
+	    Student nonExistentStudent = new Student(-1, "Inesistente", "Studente", student.getSchoolClass());
+
+	    assertThatThrownBy(() -> absenceDao.addAbsence(nonExistentStudent, LocalDate.of(2023, 11, 3)))
+	        .isInstanceOf(AbsenceDaoException.class);
+	}
 	
 	@Test
 	public void testDeleteAbsence() throws SQLException, AbsenceDaoException, DaoConnectionException {
@@ -118,6 +123,16 @@ public class AbsenceDaoDatabaseTest {
 	        }
 	    }
 	}
+	
+	
+	@Test
+	public void testDeleteAbsence_ThrowsExceptionForNonExistentAbsence() {
+	    LocalDate nonExistentAbsenceDate = LocalDate.of(2023, 11, 10);
+
+	    assertThatThrownBy(() -> absenceDao.deleteAbsence(student, nonExistentAbsenceDate))
+	        .isInstanceOf(AbsenceDaoException.class);
+	}
+
 	
 	@Test
 	public void testGetAbsencesByStudent() throws SQLException, AbsenceDaoException, DaoConnectionException {
@@ -138,6 +153,14 @@ public class AbsenceDaoDatabaseTest {
 	    actualAbsencesIterator.forEachRemaining(actualAbsences::add);
 
 	    assertThat(actualAbsences).containsExactlyInAnyOrderElementsOf(expectedAbsences);
+	}
+	
+	@Test
+	public void testGetAbsencesByStudent_ThrowsExceptionForNonExistentStudent() throws DaoConnectionException {
+	    Student nonExistentStudent = new Student(-1, "Inesistente", "Studente", student.getSchoolClass());
+	    
+	    assertThatThrownBy(() -> absenceDao.getAbsencesByStudent(nonExistentStudent))
+	        .isInstanceOf(AbsenceDaoException.class);
 	}
 
 
@@ -171,7 +194,37 @@ public class AbsenceDaoDatabaseTest {
 		assertThat(actualAbsences).containsExactlyInAnyOrderElementsOf(expectedAbsences);
 	}
 	
+	@Test
+	public void testGetAbsencesByClassInDate_ThrowsExceptionForNonExistentClass() throws AbsenceDaoException, DaoConnectionException {
+	    SchoolClass nonExistentClass = new SchoolClass("Z9");
+	    
+	    assertThatThrownBy(() -> absenceDao.getAbsencesByClassInDate(nonExistentClass, LocalDate.of(2023, 11, 3)))
+	        .isInstanceOf(AbsenceDaoException.class);
+	}
 
+	
+
+	@Test
+	public void testCheckStudentAttendanceInDay() throws AbsenceDaoException {
+	    LocalDate existingAbsenceDate = absence.getDate();
+	    LocalDate nonExistingAbsenceDate = LocalDate.of(2023, 10, 10);
+	    
+	    assertThat(absenceDao.checkStudentAttendanceInDay(student, existingAbsenceDate)).isTrue();
+	
+	    assertThat(absenceDao.checkStudentAttendanceInDay(student, nonExistingAbsenceDate)).isFalse();	    
+	}
+	
+	@Test
+	public void testCheckStudentAttendanceInDay_ThrowsExceptionForNonExistentStudent() {
+	    Student nonExistentStudent = new Student(-1, "Inesistente", "Studente", student.getSchoolClass());
+
+	    assertThatThrownBy(() -> absenceDao.checkStudentAttendanceInDay(nonExistentStudent, LocalDate.of(2023, 11, 3)))
+	        .isInstanceOf(AbsenceDaoException.class);
+	}
+
+
+	
+	
 	private void deleteTestData() throws SQLException {
 	    String deleteAbsencesQuery = "DELETE FROM Absences";
 	    conn.createStatement().executeUpdate(deleteAbsencesQuery);
