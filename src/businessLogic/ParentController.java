@@ -2,17 +2,22 @@ package businessLogic;
 
 import java.time.LocalDate;
 
-
 import java.util.Iterator;
 
 import daoFactory.DaoFactory;
+import domainModel.Absence;
 import domainModel.DisciplinaryReport;
 import domainModel.Grade;
 import domainModel.Homework;
 import domainModel.Lesson;
+import domainModel.Meeting;
+import domainModel.MeetingAvailability;
 import domainModel.Parent;
+import domainModel.SchoolClass;
 import domainModel.Student;
+import domainModel.Teacher;
 import domainModel.TeachingAssignment;
+import orm.AbsenceDaoException;
 import orm.DaoConnectionException;
 import orm.DisciplinaryReportException;
 import orm.GradeDaoException;
@@ -29,53 +34,113 @@ public class ParentController {
 
 	private StudentController studentController;
 	private Parent parent;
+	private DaoFactory daoFactory;
 
-	public ParentController(int idParent, DaoFactory daoFactory) throws StudentDaoException, SchoolClassDaoException, DaoConnectionException, ParentDaoException {
+	public ParentController(Parent parent, DaoFactory daoFactory)
+			throws StudentDaoException, SchoolClassDaoException, DaoConnectionException, ParentDaoException {
+		this.parent = parent;
+		this.daoFactory = daoFactory;
 		ParentDao parentDao = daoFactory.createParentDao();
-		Student student = parentDao.getStudentOfParentByParentId(idParent);
-		studentController = new StudentController(student.getId(), daoFactory);
-		parent = parentDao.getParentById(idParent);
+		Student student = parentDao.getStudentOfParent(parent);
+		studentController = new StudentController(student, daoFactory);
 	}
-	
-	public Parent viewParent() {
+
+	public Parent getParent() {
 		return parent;
 	}
+
+	
+	//SCHOOLCLASS
+	
+	public SchoolClass getSchoolClass() {
+		return studentController.getSchoolClass();
+	}
+	
+	//TEACHINGS
 	
 	public Iterator<TeachingAssignment> getTeachings() throws TeachingAssignmentDaoException, DaoConnectionException {
 		return studentController.getTeachings();
 	}
+
+	//GRADES
 	
-	public Iterator<Grade> getGradesByTeaching(TeachingAssignment teaching) throws GradeDaoException, DaoConnectionException {
+	public Iterator<Grade> getGradesByTeaching(TeachingAssignment teaching)
+			throws GradeDaoException, DaoConnectionException {
 		return studentController.getGradesByTeaching(teaching);
 	}
-	
+
 	public Iterator<Grade> getAllStudentGrades() throws GradeDaoException, DaoConnectionException {
 		return studentController.getAllStudentGrades();
 	}
 	
-	public Iterator<DisciplinaryReport> getDisciplinaryReports() throws DisciplinaryReportException, DaoConnectionException {
+	public double calculateTeachingGradeAverage(TeachingAssignment teaching, GradeAverageStrategy gradeAverageStrategy)
+			throws GradeDaoException, DaoConnectionException {
+		return studentController.calculateTeachingGradeAverage(teaching, gradeAverageStrategy);
+	}
+
+	public double calculateTotalGradeAverage(GradeAverageStrategy gradeAverageStrategy)
+			throws GradeDaoException, DaoConnectionException {
+		return studentController.calculateTotalGradeAverage(gradeAverageStrategy);
+	}
+	
+	
+	//REPORTS
+
+	public Iterator<DisciplinaryReport> getDisciplinaryReports()
+			throws DisciplinaryReportException, DaoConnectionException {
 		return studentController.getDisciplinaryReports();
 	}
+
+	//HOMEWORK
 	
-	
-	public Iterator<Homework> getHomeworkInDate(LocalDate date) throws DaoConnectionException, HomeworkDaoException {
-		return studentController.getHomeworkInDate(date);
+	public Iterator<Homework> getHomeworksBySubmissionDate(LocalDate date) throws DaoConnectionException, HomeworkDaoException {
+		return studentController.getHomeworksBySubmissionDate(date);
 	}
+
+	//LESSON
 	
 	public Iterator<Lesson> getLessonInDate(LocalDate date) throws DaoConnectionException, LessonDaoException {
 		return studentController.getLessonInDate(date);
 	}
+
+	//MEETINGS
+
+	public Iterator<MeetingAvailability> getAllMeetingsAvaialabilityByTeacher(Teacher teacher) {
+		return daoFactory.createMeetingAvailabilityDao().getAllMeetingsAvaialabilityByTeacher(teacher);
+	}
+
+	public void bookAMeeting(MeetingAvailability meetingAvailability) throws AlreadyBookedMeetingException {
+		if (meetingAvailability.isBooked()) {
+			throw new AlreadyBookedMeetingException();
+		}
+		daoFactory.createMeetingDao().bookMeeting(meetingAvailability, parent);
+		daoFactory.createMeetingAvailabilityDao().editBooking(meetingAvailability);
+	}
+
+	public Iterator<Meeting> getAllMyMeetings() {
+		return daoFactory.createMeetingDao().getAllMeetingsByParent(parent);
+	}
+
 	
-	public double calculateTeachingGradeAverage(TeachingAssignment teaching, GradeAverageStrategy gradeAverageStrategy) throws GradeDaoException, DaoConnectionException {
-		return studentController.calculateTeachingGradeAverage(teaching, gradeAverageStrategy);
+	//ABSENCE
+	
+	public Iterator<Absence> getAllStudentAbsences() throws AbsenceDaoException, DaoConnectionException {
+		return studentController.getAllStudentAbsences();
+	}
+
+	public void justifyAbsence(Absence absence) {
+		daoFactory.createAbsenceDao().justifyAbsence(absence);
 	}
 	
-	public double calculateTotalGradeAverage(GradeAverageStrategy gradeAverageStrategy) throws GradeDaoException, DaoConnectionException {
-		return studentController.calculateTotalGradeAverage(gradeAverageStrategy);
+	public boolean checkStudentAttendanceInDay(LocalDate date) {
+		return studentController.checkStudentAttendanceInDay(date);
 	}
+
 	
-	public void bookAMeeting() {
-		// TODO
+	
+	private class AlreadyBookedMeetingException extends Exception {
+
+		private static final long serialVersionUID = 1L;
+
 	}
-	
 }

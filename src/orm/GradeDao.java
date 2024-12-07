@@ -16,18 +16,18 @@ public interface GradeDao {
 	
 	void addNewGradeWithWeight(double value, int weight, String description, TeachingAssignment teaching, Student student, LocalDate date) throws GradeDaoException, DaoConnectionException;
 	
-	void deleteGrade(int id_grade) throws GradeDaoException, DaoConnectionException;
+	void deleteGrade(Grade grade) throws GradeDaoException, DaoConnectionException;
 	
-	void editGradeValue(int id_grade, double value) throws GradeDaoException, DaoConnectionException;
+	void editGradeValue(Grade grade, double value) throws GradeDaoException, DaoConnectionException;
 	
-	void editGradeWeight(int id_grade, int weigth) throws GradeDaoException, DaoConnectionException;
+	void editGradeWeight(Grade oldGrade, int weigth) throws GradeDaoException, DaoConnectionException;
 	
-	void editGradeDescription(int id_grade, String description) throws GradeDaoException, DaoConnectionException;
+	void editGradeDescription(Grade oldGrade, String description) throws GradeDaoException, DaoConnectionException;
 	
 	Grade getGradeById(int id_grade) throws GradeDaoException, DaoConnectionException;
 	
-	Iterator<Grade> getAllStudentGrades(int id_student) throws GradeDaoException, DaoConnectionException;
+	Iterator<Grade> getAllStudentGrades(Student student) throws GradeDaoException, DaoConnectionException;
 
-	Iterator<Grade> getStudentGradesByTeaching(int id_student, int id_teaching) throws GradeDaoException, DaoConnectionException;
+	Iterator<Grade> getStudentGradesByTeaching(Student student, TeachingAssignment teaching) throws GradeDaoException, DaoConnectionException;
 
 }

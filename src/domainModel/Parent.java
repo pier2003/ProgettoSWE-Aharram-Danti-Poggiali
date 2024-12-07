@@ -8,7 +8,7 @@ public class Parent {
 	private int id;
 	private Student student;
 
-	public Parent(String name, String surname, int id, Student student) {
+	public Parent(int id, String name, String surname, Student student) {
 		this.name = name;
 		this.surname = surname;
 		this.id = id;

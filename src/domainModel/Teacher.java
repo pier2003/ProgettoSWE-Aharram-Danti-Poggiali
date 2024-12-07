@@ -8,7 +8,7 @@ public class Teacher {
 	private String surname;
 	private int id;
 
-	public Teacher(String name, String surname, int id) {
+	public Teacher( int id, String name, String surname) {
 		this.name = name;
 		this.surname = surname;
 		this.id = id;
