@@ -145,7 +145,6 @@ public class AbsenceDaoDatabase implements AbsenceDao {
 		}
 	}
 
-	
 	void setConnection(Connection connection) {
 		conn = connection;
 	}
