@@ -1,10 +1,11 @@
 package businessLogic;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat; 
 
 import static org.easymock.EasyMock.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -12,14 +13,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import daoFactory.DaoFactory;
-import decorator.Component;
-import domainModel.Annotation;
+import domainModel.Absence;
 import domainModel.DisciplinaryReport;
 import domainModel.Grade;
+import domainModel.Homework;
+import domainModel.Lesson;
 import domainModel.SchoolClass;
 import domainModel.Student;
-import domainModel.Teacher;
 import domainModel.TeachingAssignment;
+import orm.AbsenceDao;
+import orm.AbsenceDaoException;
 import orm.DaoConnectionException;
 import orm.DisciplinaryReportDao;
 import orm.DisciplinaryReportException;
@@ -28,16 +31,13 @@ import orm.GradeDaoException;
 import orm.HomeworkDao;
 import orm.HomeworkDaoException;
 import orm.LessonDao;
+import orm.LessonDaoException;
 import orm.SchoolClassDao;
 import orm.SchoolClassDaoException;
 import orm.StudentDao;
 import orm.StudentDaoException;
 import orm.TeachingAssignmentDao;
 import orm.TeachingAssignmentDaoException;
-import strategyForGrade.ArithmeticGradeAverageStrategy;
-import strategyForGrade.GeometricGradeAverageStrategy;
-import strategyForGrade.WeightedGradeAverageStrategy;
-
 
 public class StudentControllerTestConMock {
 
@@ -48,6 +48,7 @@ public class StudentControllerTestConMock {
 	private Student student;
 	private SchoolClass schoolClass;
 	private TeachingAssignmentDao teachingAssignmentDaoMock;
+	private AbsenceDao AbsenceDaoMock;
 	private int studentId;
 	private GradeDao gradeDaoMock;
 	private DisciplinaryReportDao disciplinaryReportDaoMock;
@@ -57,6 +58,8 @@ public class StudentControllerTestConMock {
 	private TeachingAssignment teachingAssignment;
 	private Grade grade1;
 	private Grade grade2;
+	private DisciplinaryReport disciplinaryReport1;
+	private DisciplinaryReport disciplinaryReport2;
 
 
 	@Before 
@@ -69,12 +72,12 @@ public class StudentControllerTestConMock {
 		disciplinaryReportDaoMock = createMock(DisciplinaryReportDao.class);
 		homeworkDaoMock = createMock(HomeworkDao.class);
 		lessonDaoMock = createMock(LessonDao.class);
+		AbsenceDaoMock = createMock(AbsenceDao.class);
 		
 		studentId = 1;
 		schoolClass = new SchoolClass("1A");
 		student = new Student(studentId, "Mario", "Rossi", schoolClass);
 		
-		expect(studentDaoMock.getStudentById(studentId)).andReturn(student).anyTimes();
 		expect(schoolClassDaoMock.getSchoolClassByStudent(student)).andReturn(schoolClass).anyTimes();
 		expect(factoryMock.createStudentDao()).andReturn(studentDaoMock).anyTimes();
 		expect(factoryMock.createSchoolClassDao()).andReturn(schoolClassDaoMock).anyTimes();
@@ -83,11 +86,15 @@ public class StudentControllerTestConMock {
 		expect(factoryMock.createDisciplinaryReportDao()).andReturn(disciplinaryReportDaoMock).anyTimes();
 		expect(factoryMock.createHomeworkDao()).andReturn(homeworkDaoMock).anyTimes();
 		expect(factoryMock.createLessonDao()).andReturn(lessonDaoMock).anyTimes();
+		expect(factoryMock.createAbsenceDao()).andReturn(AbsenceDaoMock).anyTimes();
 		
 		studentController = new StudentController(student, factoryMock);
 		
 		grade1 = new Grade(1, student, teachingAssignment, null, 8, 1, null);
 		grade2 = new Grade(2, student, teachingAssignment, null, 4, 1, null);
+		disciplinaryReport1 = new DisciplinaryReport(student.getId(),student, null, LocalDate.of(2023, 11, 21), "");
+		disciplinaryReport2 = new DisciplinaryReport(student.getId(), student, null, LocalDate.of(2023, 11, 21), "");
+
 	}
 	
 	@Test
@@ -96,6 +103,15 @@ public class StudentControllerTestConMock {
 		
 		assertThat(studentController.getStudent()).isEqualTo(student);
 	
+		verify(factoryMock, schoolClassDaoMock);
+	}
+	
+	@Test
+	public void testGetSchool() throws SchoolClassDaoException, DaoConnectionException {
+		replay(factoryMock, schoolClassDaoMock);
+		
+		assertThat(studentController.getSchoolClass()).isEqualTo(schoolClass);
+		
 		verify(factoryMock, schoolClassDaoMock);
 	}
 	
@@ -146,7 +162,7 @@ public class StudentControllerTestConMock {
 		
 		replay(factoryMock, gradeDaoMock);
 
-		assertThat(studentController.getAllStudentGrades()).toIterable().containsExactlyInAnyOrder(grade1);
+		assertThat(studentController.getAllStudentGrades()).toIterable().containsExactlyInAnyOrder(grade1,grade2);
 
 		verify(factoryMock, gradeDaoMock);
 	}
@@ -154,240 +170,86 @@ public class StudentControllerTestConMock {
 	@Test
 	public void testGetDisciplinaryReports() throws StudentDaoException, SchoolClassDaoException, DaoConnectionException, DisciplinaryReportException {
 		ArrayList<DisciplinaryReport> reports = new ArrayList<DisciplinaryReport>();
-		DisciplinaryReport disciplinaryReport1 = new DisciplinaryReport(student.getId(),student, null, LocalDate.of(2023, 11, 21), "");
-		DisciplinaryReport disciplinaryReport2 = new DisciplinaryReport(student.getId(), student, null, LocalDate.of(2023, 11, 21), "");
-
 		reports.add(disciplinaryReport1);
 		reports.add(disciplinaryReport2);
 		Iterator<DisciplinaryReport> reportsIterator = reports.iterator();
 		
 		expect(disciplinaryReportDaoMock.getDisciplinaryReportsByStudent(student)).andReturn(reportsIterator).once();
 		
-		replay(factoryMock, studentDaoMock, schoolClassDaoMock, disciplinaryReportDaoMock);
+		replay(factoryMock, disciplinaryReportDaoMock);
 		
-		assertThat(studentController.getDisciplinaryReports()).isEqualTo(reportsIterator);
+		assertThat(studentController.getDisciplinaryReports()).toIterable().containsExactlyInAnyOrder(disciplinaryReport1, disciplinaryReport2);
 		
-		verify(factoryMock, studentDaoMock, schoolClassDaoMock, disciplinaryReportDaoMock);
+		verify(factoryMock, disciplinaryReportDaoMock);
 	}
 	
 	@Test
-	public void testGetHomeworkInDate() throws StudentDaoException, SchoolClassDaoException, DaoConnectionException, HomeworkDaoException {
+	public void testGetHomeworksBySubmissionDate() throws StudentDaoException, SchoolClassDaoException, DaoConnectionException, HomeworkDaoException {
 		LocalDate date = LocalDate.now();
-		ArrayList<Component> homeworks = new ArrayList<Component>();
-		homeworks.add(new Annotation(null, date, 1));
-		homeworks.add(new Annotation(null, date, 1));
-		Iterator<Component> homeworksIterator = homeworks.iterator();
+		ArrayList<Homework> homeworks = new ArrayList<Homework>();
+		//int id, TeachingAssignment teaching, LocalDate date, String description, LocalDate submissionDate
+		Homework homework1 = new Homework(1, teaching1, date ,"aDescription1", LocalDate.of(2024, 12, 2));
+		Homework homework2 = new Homework(2, teaching1, date ,"aDescription2", LocalDate.of(2024, 10, 2));
+
+		homeworks.add(homework1);
+		homeworks.add(homework2);
+		Iterator<Homework> homeworksIterator = homeworks.iterator();
 		
-		expect(homeworkDaoMock.getHomeworksInDay(date, schoolClass.getClassName())).andReturn(homeworksIterator).once();
+		expect(homeworkDaoMock.getHomeworksBySubmissionDate(date, schoolClass)).andReturn(homeworksIterator).once();
 		
-		replay(factoryMock, studentDaoMock, schoolClassDaoMock, homeworkDaoMock);
+		replay(factoryMock, homeworkDaoMock, schoolClassDaoMock);
 		
-		studentController = createStudentController();
-		assertThat(studentController.getHomeworkInDate(date)).isEqualTo(homeworksIterator);
+		assertThat(studentController.getHomeworksBySubmissionDate(date)).toIterable().containsExactlyInAnyOrder(homework1, homework2);
 		
-		verify(factoryMock, studentDaoMock, schoolClassDaoMock, homeworkDaoMock);
+		verify(factoryMock, homeworkDaoMock, schoolClassDaoMock);
 	}
 	
 	@Test
-	public void testGetLessonInDate() throws StudentDaoException, SchoolClassDaoException, DaoConnectionException {
+	public void testGetLessonInDate() throws StudentDaoException, SchoolClassDaoException, DaoConnectionException, LessonDaoException {
 		LocalDate date = LocalDate.now();
-		ArrayList<Component> lessons = new ArrayList<Component>();
-		lessons.add(new Annotation(null, date, 1));
-		lessons.add(new Annotation(null, date,1 ));
-		Iterator<Component> lessonsIterator = lessons.iterator();
+		ArrayList<Lesson> lessons = new ArrayList<Lesson>();
+		Lesson lesson1 = new Lesson(1, teaching1, date ,"aDescription1", LocalTime.of(10, 20), LocalTime.of(11, 20));
+		Lesson lesson2 = new Lesson(1, teaching1, date ,"aDescription1", LocalTime.of(11, 20), LocalTime.of(12, 20));
+		lessons.add(lesson1);
+		lessons.add(lesson2);
+		Iterator<Lesson> lessonsIterator = lessons.iterator();
 		
-		expect(lessonDaoMock.getLessonsInDay(date, schoolClass.getClassName())).andReturn(lessonsIterator).once();
+		expect(lessonDaoMock.getLessonsInDay(date, schoolClass)).andReturn(lessonsIterator).once();
 		
-		replay(factoryMock, studentDaoMock, schoolClassDaoMock, lessonDaoMock);
+		replay(factoryMock, schoolClassDaoMock, lessonDaoMock);
 		
-		studentController = createStudentController();
-		assertThat(studentController.getLessonInDate(date)).isEqualTo(lessonsIterator);
+		assertThat(studentController.getLessonInDate(date)).toIterable().containsExactlyInAnyOrder(lesson1,lesson2);
 		
-		verify(factoryMock, studentDaoMock, schoolClassDaoMock, lessonDaoMock);
+		verify(factoryMock, schoolClassDaoMock, lessonDaoMock);
+	}
+
+	@Test
+	public void testGetAllStudentAbsences() throws AbsenceDaoException, DaoConnectionException {
+		ArrayList<Absence> absences = new ArrayList<Absence>();
+		Absence absence1 = new Absence(student, LocalDate.of(2024, 06, 20), false);
+		Absence absence2 = new Absence(student, LocalDate.of(2024, 05, 20),  false);
+		absences.add(absence1);
+		absences.add(absence2);
+		Iterator<Absence> absencesIterator = absences.iterator();
+		
+		expect(AbsenceDaoMock.getAbsencesByStudent(student)).andReturn(absencesIterator).once();
+		
+		replay(factoryMock, AbsenceDaoMock);
+		
+		assertThat(studentController.getAllStudentAbsences()).toIterable().containsExactlyInAnyOrder(absence1, absence2);
+		
+		verify(factoryMock, AbsenceDaoMock);
 	}
 	
 	@Test
-	public void testGetComponentAnnotationInDate() throws StudentDaoException, SchoolClassDaoException, DaoConnectionException, HomeworkDaoException {
-	    LocalDate date = LocalDate.now();
-	    
-	    ArrayList<Component> lessons = new ArrayList<Component>();
-	    lessons.add(new Annotation(null, date, 1));
-	    lessons.add(new Annotation(null, date, 1));
-	    Iterator<Component> lessonsIterator = lessons.iterator();
-	    
-	    ArrayList<Component> homeworks = new ArrayList<Component>();
-	    homeworks.add(new Annotation(null, date, 1));
-	    homeworks.add(new Annotation(null, date, 1));
-	    Iterator<Component> homeworksIterator = homeworks.iterator();
-	    
-	    expect(lessonDaoMock.getLessonsInDay(date, schoolClass.getClassName())).andReturn(lessonsIterator).once();
-	    expect(homeworkDaoMock.getHomeworksInDay(date, schoolClass.getClassName())).andReturn(homeworksIterator).once();
-	    
-	    replay(factoryMock, studentDaoMock, schoolClassDaoMock, lessonDaoMock, homeworkDaoMock);
-	    
-	    studentController = createStudentController();
-	    Iterator<Component> result = studentController.getComponentAnnotationInDate(date);
-	    
-	    assertThat(result).hasNext();
-	    assertThat(result.next()).isEqualTo(lessons.get(0));
-	    assertThat(result.next()).isEqualTo(lessons.get(1));
-	    assertThat(result.next()).isEqualTo(homeworks.get(0));
-	    assertThat(result.next()).isEqualTo(homeworks.get(1));
-	    assertThat(result).isExhausted();
-	    
-	    verify(factoryMock, studentDaoMock, schoolClassDaoMock, lessonDaoMock, homeworkDaoMock);
-	}
-
-	@Test
-	public void testCalculateTeachingGradesAverageWithArithmeticAverage() throws StudentDaoException, GradeDaoException, SchoolClassDaoException, DaoConnectionException {
-		TeachingAssignment teachingAssignment = new TeachingAssignment(1, null, null, null);
-		ArrayList<Grade> grades = new ArrayList<Grade>();
-		Grade g1 = new Grade(0, student, teachingAssignment, null, 8.5, 1, null);
-		Grade g2 = new Grade(0, student, teachingAssignment, null, 7.25, 1, null);
-		Grade g3 = new Grade(0, student, teachingAssignment, null, 7, 1, null);
-		grades.add(g1);
-		grades.add(g2);
-		grades.add(g3);
-		Iterator<Grade> gradesIterator = grades.iterator();
-
-		expect(gradeDaoMock.getStudentGradesByTeaching(studentId, 1)).andReturn(gradesIterator).once();
+	public void testCheckStudentAttendanceInDay() throws AbsenceDaoException, DaoConnectionException {
+		expect(AbsenceDaoMock.checkStudentAttendanceInDay(student, LocalDate.of(2024, 12, 10))).andReturn(true).once();
 		
+		replay(factoryMock, AbsenceDaoMock);
 		
-		double expectedAverage = (8.5+7.25+7)/3;
+		assertThat(studentController.checkStudentAttendanceInDay(LocalDate.of(2024, 12, 10))).isEqualTo(true);
 		
-		replay(factoryMock, studentDaoMock, schoolClassDaoMock, gradeDaoMock);
-
-		StudentController studentController = new StudentController(studentId, factoryMock);
-		assertThat(studentController.calculateTeachingGradeAverage(teachingAssignment, new ArithmeticGradeAverageStrategy())).isEqualTo(expectedAverage);
-		
-		verify(factoryMock, studentDaoMock, schoolClassDaoMock, gradeDaoMock);
-	}
-	
-	@Test
-	public void testCalculateTeachingGradesAverageWithGeometricAverage() throws StudentDaoException, GradeDaoException, SchoolClassDaoException, DaoConnectionException {
-		TeachingAssignment teachingAssignment = new TeachingAssignment(1, null, null, null);
-		ArrayList<Grade> grades = new ArrayList<Grade>();
-		Grade g1 = new Grade(0, student, teachingAssignment, null, 8.5, 1, null);
-		Grade g2 = new Grade(0, student, teachingAssignment, null, 7.25, 1, null);
-		Grade g3 = new Grade(0, student, teachingAssignment, null, 7, 1, null);
-		grades.add(g1);
-		grades.add(g2);
-		grades.add(g3);
-		Iterator<Grade> gradesIterator = grades.iterator();
-
-		expect(gradeDaoMock.getStudentGradesByTeaching(studentId, 1)).andReturn(gradesIterator).once();
-		
-		double product = 8.5 * 7.25 * 7;
-        double expectedAverage = Math.pow(product, 1.0 / 3);
-		
-		replay(factoryMock, studentDaoMock, schoolClassDaoMock, gradeDaoMock);
-
-		StudentController studentController = new StudentController(studentId, factoryMock);
-		assertThat(studentController.calculateTeachingGradeAverage(teachingAssignment, new GeometricGradeAverageStrategy())).isEqualTo(expectedAverage);
-		
-		verify(factoryMock, studentDaoMock, schoolClassDaoMock, gradeDaoMock);
-	}
-	
-	@Test
-	public void testCalculateTeachingGradesAverageWithWeightedAverage() throws StudentDaoException, GradeDaoException, SchoolClassDaoException, DaoConnectionException {
-		TeachingAssignment teachingAssignment = new TeachingAssignment(1, null, null, null);
-		ArrayList<Grade> grades = new ArrayList<Grade>();
-		Grade g1 = new Grade(0, student, teachingAssignment, null, 8.5, 2, null);
-		Grade g2 = new Grade(0, student, teachingAssignment, null, 7.25, 3, null);
-		Grade g3 = new Grade(0, student, teachingAssignment, null, 7, 5, null);
-		grades.add(g1);
-		grades.add(g2);
-		grades.add(g3);
-		Iterator<Grade> gradesIterator = grades.iterator();
-
-		expect(gradeDaoMock.getStudentGradesByTeaching(studentId, 1)).andReturn(gradesIterator).once();
-		
-		double weightedSum = (8.5 * 2) + (7.25 * 3) + (7 * 5);
-     	double totalWeight = 2 + 3 + 5;
-     	double expectedAverage = weightedSum / totalWeight;
-		
-		replay(factoryMock, studentDaoMock, schoolClassDaoMock, gradeDaoMock);
-
-		StudentController studentController = new StudentController(studentId, factoryMock);
-		assertThat(studentController.calculateTeachingGradeAverage(teachingAssignment, new WeightedGradeAverageStrategy())).isEqualTo(expectedAverage);
-		
-		verify(factoryMock, studentDaoMock, schoolClassDaoMock, gradeDaoMock);
-	}
-	
-	@Test
-	public void testCalculateTotalGradesAverageWithArithmeticAverage() throws StudentDaoException, GradeDaoException, SchoolClassDaoException, DaoConnectionException {
-		TeachingAssignment teachingAssignment = new TeachingAssignment(1, null, null, null);
-		ArrayList<Grade> grades = new ArrayList<Grade>();
-		Grade g1 = new Grade(0, student, teachingAssignment, null, 8.5, 1, null);
-		Grade g2 = new Grade(0, student, teachingAssignment, null, 7.25, 1, null);
-		Grade g3 = new Grade(0, student, teachingAssignment, null, 7, 1, null);
-		grades.add(g1);
-		grades.add(g2);
-		grades.add(g3);
-		Iterator<Grade> gradesIterator = grades.iterator();
-
-		expect(gradeDaoMock.getAllStudentGrades(studentId)).andReturn(gradesIterator).once();
-		
-		double expectedAverage = (8.5+7.25+7)/3;
-		
-		replay(factoryMock, studentDaoMock, schoolClassDaoMock, gradeDaoMock);
-
-		StudentController studentController = new StudentController(studentId, factoryMock);
-		assertThat(studentController.calculateTotalGradeAverage(new ArithmeticGradeAverageStrategy())).isEqualTo(expectedAverage);
-		
-		verify(factoryMock, studentDaoMock, schoolClassDaoMock, gradeDaoMock);
-	}
-	
-	@Test
-	public void testCalculateTotalGradesAverageWithGeometricAverage() throws StudentDaoException, GradeDaoException, SchoolClassDaoException, DaoConnectionException {
-		TeachingAssignment teachingAssignment = new TeachingAssignment(1, null, null, null);
-		ArrayList<Grade> grades = new ArrayList<Grade>();
-		Grade g1 = new Grade(0, student, teachingAssignment, null, 8.5, 1, null);
-		Grade g2 = new Grade(0, student, teachingAssignment, null, 7.25, 1, null);
-		Grade g3 = new Grade(0, student, teachingAssignment, null, 7, 1, null);
-		grades.add(g1);
-		grades.add(g2);
-		grades.add(g3);
-		Iterator<Grade> gradesIterator = grades.iterator();
-
-		expect(gradeDaoMock.getAllStudentGrades(studentId)).andReturn(gradesIterator).once();
-		
-		double product = 8.5 * 7.25 * 7;
-        double expectedAverage = Math.pow(product, 1.0 / 3);
-		
-		replay(factoryMock, studentDaoMock, schoolClassDaoMock, gradeDaoMock);
-
-		StudentController studentController = new StudentController(studentId, factoryMock);
-		assertThat(studentController.calculateTotalGradeAverage(new GeometricGradeAverageStrategy())).isEqualTo(expectedAverage);
-		
-		verify(factoryMock, studentDaoMock, schoolClassDaoMock, gradeDaoMock);
-	}
-	
-	@Test
-	public void testCalculateTotalGradesAverageWithWeightedAverage() throws StudentDaoException, GradeDaoException, SchoolClassDaoException, DaoConnectionException {
-		TeachingAssignment teachingAssignment = new TeachingAssignment(1, null, null, null);
-		ArrayList<Grade> grades = new ArrayList<Grade>();
-		Grade g1 = new Grade(0, student, teachingAssignment, null, 8.5, 2, null);
-		Grade g2 = new Grade(0, student, teachingAssignment, null, 7.25, 3, null);
-		Grade g3 = new Grade(0, student, teachingAssignment, null, 7, 5, null);
-		grades.add(g1);
-		grades.add(g2);
-		grades.add(g3);
-		Iterator<Grade> gradesIterator = grades.iterator();
-
-		expect(gradeDaoMock.getAllStudentGrades(studentId)).andReturn(gradesIterator).once();
-		
-		double weightedSum = (8.5 * 2) + (7.25 * 3) + (7 * 5);
-     	double totalWeight = 2 + 3 + 5;
-     	double expectedAverage = weightedSum / totalWeight;
-		
-		replay(factoryMock, studentDaoMock, schoolClassDaoMock, gradeDaoMock);
-
-		StudentController studentController = new StudentController(studentId, factoryMock);
-		assertThat(studentController.calculateTotalGradeAverage(new WeightedGradeAverageStrategy())).isEqualTo(expectedAverage);
-		
-		verify(factoryMock, studentDaoMock, schoolClassDaoMock, gradeDaoMock);
+		verify(factoryMock, AbsenceDaoMock);
 	}
 	
 }
-

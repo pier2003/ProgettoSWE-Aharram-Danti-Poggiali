@@ -23,6 +23,7 @@ import domainModel.SchoolClass;
 import domainModel.Student;
 import domainModel.Teacher;
 import orm.AbsenceDao;
+import orm.AbsenceDaoException;
 import orm.DaoConnectionException;
 import orm.GradeDaoException;
 import orm.MeetingAvailabilityDao;
@@ -136,7 +137,7 @@ public class ParenControllTestConMock {
     }
     
     @Test
-    public void testJustifyAbsence() {
+    public void testJustifyAbsence() throws AbsenceDaoException {
         Absence absence = new Absence(student, date, false);
 
         expect(factoryMock.createAbsenceDao()).andReturn(absenceDaoMock);
