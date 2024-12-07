@@ -29,7 +29,7 @@ public class AbsenceDaoDatabase implements AbsenceDao {
 	    String query = "INSERT INTO Absences (date, justification, id_student) VALUES (?, ?, ?)";
 	    try (PreparedStatement stmt = conn.prepareStatement(query)) {
 	        stmt.setDate(1, Date.valueOf(date));       
-	        stmt.setBoolean(2, false);                
+	        stmt.setInt(2, 0);                
 	        stmt.setInt(3, student.getId());       
 	        stmt.executeUpdate();
 	    } catch (SQLException e) {
@@ -56,6 +56,23 @@ public class AbsenceDaoDatabase implements AbsenceDao {
 	    }
 	}
 
+	@Override
+	public boolean checkStudentAttendanceInDay(Student student, LocalDate date) throws AbsenceDaoException {
+	    try {
+	        checkStudentExist(student);
+	        String query = "SELECT * FROM Absences WHERE id_student = ? AND date = ?;";
+	        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+	            stmt.setInt(1, student.getId());
+	            stmt.setDate(2, Date.valueOf(date));
+
+	            try (ResultSet rs = stmt.executeQuery()) {
+	                return rs.next();
+	            }
+	        }
+	    } catch (SQLException | AbsenceDaoException | DaoConnectionException e) {
+	        throw new AbsenceDaoException("Database error while fetching absence data.");
+	    }
+	}
 
 	@Override
 	public Iterator<Absence> getAbsencesByClassInDate(SchoolClass schoolClass, LocalDate date)
@@ -148,24 +165,6 @@ public class AbsenceDaoDatabase implements AbsenceDao {
 
 	void setConnection(Connection connection) {
 		conn = connection;
-	}
-
-	@Override
-	public boolean checkStudentAttendanceInDay(Student student, LocalDate date) throws AbsenceDaoException {
-	    try {
-	        checkStudentExist(student);
-	        String query = "SELECT * FROM Absences WHERE id_student = ? AND date = ?;";
-	        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-	            stmt.setInt(1, student.getId());
-	            stmt.setDate(2, Date.valueOf(date));
-
-	            try (ResultSet rs = stmt.executeQuery()) {
-	                return rs.next();
-	            }
-	        }
-	    } catch (SQLException | AbsenceDaoException | DaoConnectionException e) {
-	        throw new AbsenceDaoException("Database error while fetching absence data.");
-	    }
 	}
 
 
