@@ -102,7 +102,6 @@ public class TeacherControllerTestConMock {
 
 	@Before
 	public void setup() throws StudentDaoException, TeacherDaoException, DaoConnectionException {
-		// Mock e oggetti principali
 		factoryMock = createMock(DaoFactory.class);
 		teacherDaoMock = createMock(TeacherDao.class);
 		studentDaoMock = createMock(StudentDao.class);
@@ -118,7 +117,6 @@ public class TeacherControllerTestConMock {
 
 		teacher = new Teacher(1, "Mario", "Rossi");
 
-		// Aspettative comuni per DaoFactory
 		expect(factoryMock.createSchoolClassDao()).andReturn(schoolClassDaoMock).anyTimes();
 		expect(factoryMock.createStudentDao()).andReturn(studentDaoMock).anyTimes();
 		expect(factoryMock.createGradeDao()).andReturn(gradeDaoMock).anyTimes();
@@ -143,19 +141,11 @@ public class TeacherControllerTestConMock {
 		classes.add(schoolClass1);
 		classes.add(schoolClass2);
 
-		// Dati condivisi per i test
 		teachingAssignments = new ArrayList<>();
 		teachingAssignment1 = new TeachingAssignment(1, "matematica", teacher, schoolClass1);
 		teachingAssignment2 = new TeachingAssignment(2, "scienze", teacher, schoolClass2);
 		teachingAssignments.add(teachingAssignment1);
 		teachingAssignments.add(teachingAssignment2);
-
-		students = new ArrayList<>();
-		schoolClassForStudents = new SchoolClass("1A");
-		student1 = new Student(1, "Fabio", "Rossi", schoolClassForStudents);
-		student2 = new Student(2, "Gino", "Rossi", schoolClassForStudents);
-		students.add(student1);
-		students.add(student2);
 
 		grades = new ArrayList<>();
 		grade1 = new Grade(1, student1, teachingAssignment1, date, 8, 1, "Ottimo lavoro");
