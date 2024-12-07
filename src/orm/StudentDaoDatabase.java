@@ -27,9 +27,9 @@ public class StudentDaoDatabase implements StudentDao {
 			ResultSet rs = getResultsFromDB(query);
 			while (rs.next()) {
 				students.add(new Student
-						(rs.getString("name"), 
+						(rs.getInt("id_student"), 
 						rs.getString("surname"), 
-						rs.getInt("id_student"),
+						rs.getString("name"),
 						new SchoolClass(rs.getString("class"))));
 			}
 			return students.iterator();
@@ -44,9 +44,9 @@ public class StudentDaoDatabase implements StudentDao {
 		try {
 			ResultSet rs = getResultsFromDB(query);
 			if (rs.next()) {
-				return new Student(rs.getString("name"),
+				return new Student(rs.getInt("id_student"),
 						rs.getString("surname"),
-						rs.getInt("id_student"),
+						rs.getString("name"),
 						new SchoolClass(rs.getString("class")));
 			}
 			else {
@@ -72,9 +72,9 @@ public class StudentDaoDatabase implements StudentDao {
 			List<Student> students = new ArrayList<Student>();
 			while (rs.next()) {
 				students.add(new Student
-						(rs.getString("name"), 
+						(rs.getInt("id_student"), 
 						rs.getString("surname"), 
-						rs.getInt("id_student"),
+						rs.getString("name"),
 						new SchoolClass(rs.getString("class"))));
 			}
 			return students.iterator();

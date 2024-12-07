@@ -132,13 +132,13 @@ public class ParentController {
 		daoFactory.createAbsenceDao().justifyAbsence(absence);
 	}
 	
-	public boolean checkStudentAttendanceInDay(LocalDate date) {
+	public boolean checkStudentAttendanceInDay(LocalDate date) throws AbsenceDaoException {
 		return studentController.checkStudentAttendanceInDay(date);
 	}
 
 	
 	
-	private class AlreadyBookedMeetingException extends Exception {
+	public class AlreadyBookedMeetingException extends Exception {
 
 		private static final long serialVersionUID = 1L;
 
