@@ -43,28 +43,24 @@ public class TeacherController {
 	public Teacher getTeacher() {
 		return teacher;
 	}
-	
+
 	//TEACHINGS
 	
 	public Iterator<TeachingAssignment> getAllMyTeachings(){
 		return daoFactory.createTeachingAssignmentDao().getAllTeacherTeachings(teacher);
 	}
 	
-	
-	
 	//SCHOOLCLASS
 
 	public Iterator<SchoolClass> getClassByTeaching(TeachingAssignment teachingAssignment) throws SchoolClassDaoException, DaoConnectionException {
 		return daoFactory.createSchoolClassDao().getAllSchoolClassesByTeaching(teachingAssignment);
 	}
-
 	
 	//STUDENTS
 	
 	public Iterator<Student> getStudentsByClass(SchoolClass schoolClass) throws StudentDaoException, DaoConnectionException {
 		return daoFactory.createStudentDao().getStudentsByClass(schoolClass);
 	}
-
 	
 	//GRADES
 	
@@ -265,20 +261,20 @@ public class TeacherController {
 	}
 
 	
-	private class MeetingAlreadyBookedException extends Exception {
+	public class MeetingAlreadyBookedException extends Exception {
 		private static final long serialVersionUID = 1L;
 	}
 	
-	private class IllegalHomeworkAccessException extends Exception {
+	public class IllegalHomeworkAccessException extends Exception {
 		private static final long serialVersionUID = 1L;
 	}
 	
 	
-	private class IllegalLessonAccessException extends Exception {
+	public class IllegalLessonAccessException extends Exception {
 		private static final long serialVersionUID = 1L;
 	}
 	
-	private class IllegalReportAccessException extends Exception {
+	public class IllegalReportAccessException extends Exception {
 		private static final long serialVersionUID = 1L;
 	}
 }

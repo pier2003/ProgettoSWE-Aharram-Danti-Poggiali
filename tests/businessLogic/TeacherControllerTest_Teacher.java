@@ -101,13 +101,12 @@ public class TeacherControllerTest_Teacher {
 	public void testGetClassByTeaching()
 			throws SchoolClassDaoException, DaoConnectionException, StudentDaoException, TeacherDaoException {
 		Iterator<SchoolClass> classesIterator = classes.iterator();
-		TeachingAssignment teachingAssignment = teachingAssignment1;
 
-		expect(schoolClassDaoMock.getAllSchoolClassesByTeaching(teachingAssignment)).andReturn(classesIterator).once();
+		expect(schoolClassDaoMock.getAllSchoolClassesByTeaching(teachingAssignment1)).andReturn(classesIterator).once();
 
 		replay(factoryMock, schoolClassDaoMock);
 
-		assertThat(teacherController.getClassByTeaching(teachingAssignment)).isEqualTo(classesIterator);
+		assertThat(teacherController.getClassByTeaching(teachingAssignment1)).toIterable().containsExactlyInAnyOrder(schoolClass1, schoolClass2);
 
 		verify(factoryMock, schoolClassDaoMock);
 	}
@@ -120,7 +119,7 @@ public class TeacherControllerTest_Teacher {
 
 		replay(factoryMock, studentDaoMock);
 
-		assertThat(teacherController.getStudentsByClass(schoolClassForStudents)).isEqualTo(studentsIterator);
+		assertThat(teacherController.getStudentsByClass(schoolClassForStudents)).toIterable().containsExactlyInAnyOrder(student1, student2);
 
 		verify(factoryMock, studentDaoMock);
 	}
