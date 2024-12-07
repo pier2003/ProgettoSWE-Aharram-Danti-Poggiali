@@ -197,7 +197,7 @@ public class TeacherControllerTestConMock {
 
 		verify(factoryMock, teachingAssignmentDaoMock);
 	}
-
+ 
 	@Test
 	public void testGetClassByTeaching()
 			throws SchoolClassDaoException, DaoConnectionException, StudentDaoException, TeacherDaoException {
