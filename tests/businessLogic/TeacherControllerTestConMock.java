@@ -214,7 +214,7 @@ public class TeacherControllerTestConMock {
 	}
 
 	@Test
-	public void testGetStudentByClass() throws DaoConnectionException, StudentDaoException, TeacherDaoException {
+	public void testGetStudentsByClass() throws DaoConnectionException, StudentDaoException, TeacherDaoException {
 		Iterator<Student> studentsIterator = students.iterator();
 
 		expect(studentDaoMock.getStudentsByClass(schoolClassForStudents)).andReturn(studentsIterator).once();

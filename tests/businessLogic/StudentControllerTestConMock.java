@@ -53,6 +53,7 @@ public class StudentControllerTestConMock {
 	private HomeworkDao homeworkDaoMock;
 	private LessonDao lessonDaoMock;
 
+
 	@Before 
 	public void setup() throws DaoConnectionException, StudentDaoException, SchoolClassDaoException {
 		factoryMock = createMock(DaoFactory.class);
@@ -66,7 +67,7 @@ public class StudentControllerTestConMock {
 		
 		studentId = 1;
 		schoolClass = new SchoolClass("1A");
-		student = new Student("Mario", "Rossi", studentId, schoolClass);
+		student = new Student(studentId, "Mario", "Rossi", schoolClass);
 		
 		expect(studentDaoMock.getStudentById(studentId)).andReturn(student).anyTimes();
 		expect(schoolClassDaoMock.getSchoolClassByStudent(student)).andReturn(schoolClass).anyTimes();
@@ -77,20 +78,17 @@ public class StudentControllerTestConMock {
 		expect(factoryMock.createDisciplinaryReportDao()).andReturn(disciplinaryReportDaoMock).anyTimes();
 		expect(factoryMock.createHomeworkDao()).andReturn(homeworkDaoMock).anyTimes();
 		expect(factoryMock.createLessonDao()).andReturn(lessonDaoMock).anyTimes();
-	}
-	
-	private StudentController createStudentController() throws StudentDaoException, SchoolClassDaoException, DaoConnectionException {
-		return new StudentController(1, factoryMock);
+		
+		studentController = new StudentController(student, factoryMock);
 	}
 	
 	@Test
-	public void testViewStudent() throws StudentDaoException, SchoolClassDaoException, DaoConnectionException {
-		replay(factoryMock, studentDaoMock, schoolClassDaoMock);
-
-		studentController = createStudentController();
-		assertThat(studentController.viewStudent()).isEqualTo(student);
-
-		verify(factoryMock, studentDaoMock, schoolClassDaoMock);
+	public void testGetStudent() throws StudentDaoException, SchoolClassDaoException, DaoConnectionException {
+		replay(factoryMock, schoolClassDaoMock);
+		
+		assertThat(studentController.getStudent()).isEqualTo(student);
+	
+		verify(factoryMock, schoolClassDaoMock);
 	}
 	
 	@Test
