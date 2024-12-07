@@ -22,7 +22,6 @@ public class AbsenceDaoDatabase implements AbsenceDao {
 		this.conn = conn;
 	}
 
-
 	@Override
 	public void addAbsence(Student student, LocalDate date) throws AbsenceDaoException, DaoConnectionException {
 	    checkStudentExist(student);
