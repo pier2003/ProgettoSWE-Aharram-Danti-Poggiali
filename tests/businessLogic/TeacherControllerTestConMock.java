@@ -131,8 +131,8 @@ public class TeacherControllerTestConMock {
 		expect(factoryMock.createMeetingAvailabilityDao()).andReturn(meetingAvailabilityDaoMock).anyTimes();
 		expect(factoryMock.createMeetingDao()).andReturn(meetingDaoMock).anyTimes();
 		
-		teacherController = createTeacherController();
-
+		teacherController = new TeacherController(teacher, factoryMock);
+				
 		date = LocalDate.now();
 		startHour = LocalTime.of(9, 0);
 		endHour = LocalTime.of(11, 0);
@@ -187,11 +187,6 @@ public class TeacherControllerTestConMock {
 		lessons.add(lesson1);
 		lessons.add(lesson2);
 
-	}
-
-	private TeacherController createTeacherController()
-			throws StudentDaoException, TeacherDaoException, DaoConnectionException {
-		return new TeacherController(teacher, factoryMock);
 	}
 
 	@Test
