@@ -154,8 +154,11 @@ public class StudentControllerTestConMock {
 	@Test
 	public void testGetDisciplinaryReports() throws StudentDaoException, SchoolClassDaoException, DaoConnectionException, DisciplinaryReportException {
 		ArrayList<DisciplinaryReport> reports = new ArrayList<DisciplinaryReport>();
-		reports.add(new DisciplinaryReport(student.getId(),student, null, LocalDate.of(2023, 11, 21), ""));
-		reports.add(new DisciplinaryReport(student.getId(), student, null, LocalDate.of(2023, 11, 21), ""));
+		DisciplinaryReport disciplinaryReport1 = new DisciplinaryReport(student.getId(),student, null, LocalDate.of(2023, 11, 21), "");
+		DisciplinaryReport disciplinaryReport2 = new DisciplinaryReport(student.getId(), student, null, LocalDate.of(2023, 11, 21), "");
+
+		reports.add(disciplinaryReport1);
+		reports.add(disciplinaryReport2);
 		Iterator<DisciplinaryReport> reportsIterator = reports.iterator();
 		
 		expect(disciplinaryReportDaoMock.getDisciplinaryReportsByStudent(student)).andReturn(reportsIterator).once();
