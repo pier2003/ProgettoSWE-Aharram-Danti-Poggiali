@@ -61,7 +61,6 @@ public class SchoolClassDaoDatabase implements SchoolClassDao {
 	@Override
 	public Iterator<SchoolClass> getAllSchoolClassesByTeaching(TeachingAssignment teachingAssignment)
 			throws SchoolClassDaoException, DaoConnectionException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

@@ -38,10 +38,9 @@ public class ParenControllTestConMock {
 		studentDaoMock = createMock(StudentDao.class);
 		schoolClassDaoMock = createMock(SchoolClassDao.class);
 		
-		parentId = 1;
-		studentId = 1;
-		parent = new Parent("Luigi", "Rossi", parentId, new Student("Mario", "Rossi", studentId	, new SchoolClass("1A")));
-		student = new Student("Pippo", "Pino", 1, new SchoolClass("1A"));
+		SchoolClass schoolClass = new SchoolClass("1A");
+		student = new Student(1, "Pippo", "Pino", schoolClass);
+		parent = new Parent(1, "Luigi", "Rossi", student);
 		
 		expect(factoryMock.createParentDao()).andReturn(parentDaoMock).anyTimes();
 		expect(factoryMock.createStudentDao()).andReturn(studentDaoMock).anyTimes();

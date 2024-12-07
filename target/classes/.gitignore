@@ -1,3 +1,17 @@
+<<<<<<< HEAD
 /orm/
 /businessLogic/
 /gui/
+=======
+/businessLogic/
+<<<<<<< HEAD
+/orm/
+=======
+/domainModel/
+/orm/
+/testDaoFactory/
+/testDomainModel/
+/utils/
+/daoFactory/
+>>>>>>> branch 'main' of https://github.com/pier2003/ProgettoSWE-Aharram-Danti-Poggiali.git
+>>>>>>> ec81d593a7d13b1c932986e1ced4c2655231014e

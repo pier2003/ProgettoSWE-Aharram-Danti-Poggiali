@@ -52,7 +52,7 @@ public class ParentController {
 	
 	//SCHOOLCLASS
 	
-	public SchoolClass getSchoolClass() {
+	public SchoolClass getSchoolClass() throws SchoolClassDaoException, DaoConnectionException {
 		return studentController.getSchoolClass();
 	}
 	
@@ -93,13 +93,13 @@ public class ParentController {
 
 	//HOMEWORK
 	
-	public Iterator<Homework> getHomeworksBySubmissionDate(LocalDate date) throws DaoConnectionException, HomeworkDaoException {
+	public Iterator<Homework> getHomeworksBySubmissionDate(LocalDate date) throws DaoConnectionException, HomeworkDaoException, SchoolClassDaoException {
 		return studentController.getHomeworksBySubmissionDate(date);
 	}
 
 	//LESSON
 	
-	public Iterator<Lesson> getLessonInDate(LocalDate date) throws DaoConnectionException, LessonDaoException {
+	public Iterator<Lesson> getLessonInDate(LocalDate date) throws DaoConnectionException, LessonDaoException, SchoolClassDaoException {
 		return studentController.getLessonInDate(date);
 	}
 
