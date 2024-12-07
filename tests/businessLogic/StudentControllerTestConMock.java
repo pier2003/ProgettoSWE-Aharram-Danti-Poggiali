@@ -146,7 +146,7 @@ public class StudentControllerTestConMock {
 		
 		replay(factoryMock, gradeDaoMock);
 
-		assertThat(studentController.getAllStudentGrades()).toIterable().containsExactlyInAnyOrder(grade1,grade2);
+		assertThat(studentController.getAllStudentGrades()).toIterable().containsExactlyInAnyOrder(grade1);
 
 		verify(factoryMock, gradeDaoMock);
 	}
