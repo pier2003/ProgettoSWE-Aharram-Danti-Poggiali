@@ -81,7 +81,7 @@ public class AbsenceDaoDatabaseTest {
 		assertThat(rs.next()).isTrue();
 		
 		int totalAbsences = rs.getInt("total");
-		//assertThat(totalAbsences).isEqualTo(2);
+		assertThat(totalAbsences).isEqualTo(2);
 
 		String verifyQuery = "SELECT date FROM Absences WHERE id_student = " + student.getId() + " AND date = '"
 				+ newAbsenceDate + "'";
