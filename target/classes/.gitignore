@@ -1,6 +1,7 @@
-/orm/
 /businessLogic/
 /domainModel/
-/utils/
+/orm/
+/testDaoFactory/
 /testDomainModel/
+/utils/
 /daoFactory/

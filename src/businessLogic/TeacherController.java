@@ -51,7 +51,6 @@ public class TeacherController {
 	}
 	
 	
-	
 	//SCHOOLCLASS
 
 	public Iterator<SchoolClass> getClassByTeaching(TeachingAssignment teachingAssignment) throws SchoolClassDaoException, DaoConnectionException {
@@ -184,14 +183,14 @@ public class TeacherController {
 		return daoFactory.createHomeworkDao().getHomeworksBySubmissionDate(date, schoolClass);
 	}
 	
-	public void deleteHomework(Homework homework) throws IllegalHomeworkAccessException {
-		if (homework.getTeaching().getTeacher().equals(teacher)) {
-			daoFactory.createHomeworkDao().deleteHomework(homework);
+		public void deleteHomework(Homework homework) throws IllegalHomeworkAccessException {
+			if (homework.getTeaching().getTeacher().equals(teacher)) {
+				daoFactory.createHomeworkDao().deleteHomework(homework);
+			}
+			else {
+				throw new IllegalHomeworkAccessException();
+			}
 		}
-		else {
-			throw new IllegalHomeworkAccessException();
-		}
-	}
 	
 	//LESSONS
 	
@@ -265,20 +264,20 @@ public class TeacherController {
 	}
 
 	
-	private class MeetingAlreadyBookedException extends Exception {
+	public class MeetingAlreadyBookedException extends Exception {
 		private static final long serialVersionUID = 1L;
 	}
 	
-	private class IllegalHomeworkAccessException extends Exception {
+	public class IllegalHomeworkAccessException extends Exception {
 		private static final long serialVersionUID = 1L;
 	}
 	
 	
-	private class IllegalLessonAccessException extends Exception {
+	public class IllegalLessonAccessException extends Exception {
 		private static final long serialVersionUID = 1L;
 	}
 	
-	private class IllegalReportAccessException extends Exception {
+	public class IllegalReportAccessException extends Exception {
 		private static final long serialVersionUID = 1L;
 	}
 }
