@@ -28,12 +28,10 @@ public class StudentController {
 
 	private Student student;
 	private DaoFactory daoFactory;
-	private SchoolClass schoolClass;
 
-	public StudentController(Student student, DaoFactory daoFactory) throws StudentDaoException, SchoolClassDaoException, DaoConnectionException {
+	public StudentController(Student student, DaoFactory daoFactory) throws StudentDaoException, DaoConnectionException {
 		this.student = student;
 		this.daoFactory = daoFactory;
-		schoolClass = daoFactory.createSchoolClassDao().getSchoolClassByStudent(student);
 	}
 	
 	public Student getStudent() {
@@ -43,8 +41,8 @@ public class StudentController {
 	
 	//CLASS
 	
-	public SchoolClass getSchoolClass() {
-		return schoolClass;
+	public SchoolClass getSchoolClass() throws SchoolClassDaoException, DaoConnectionException {
+		return daoFactory.createSchoolClassDao().getSchoolClassByStudent(student);
 	}
 	
 	//TEACHINGS
@@ -80,14 +78,14 @@ public class StudentController {
 	
 	//HOMEWORK
 	
-	public Iterator<Homework> getHomeworksBySubmissionDate(LocalDate date) throws DaoConnectionException, HomeworkDaoException {
+	public Iterator<Homework> getHomeworksBySubmissionDate(LocalDate date) throws DaoConnectionException, HomeworkDaoException, SchoolClassDaoException {
 		return daoFactory.createHomeworkDao().getHomeworksBySubmissionDate(date, getSchoolClass());
 	}
 	
 	
 	//LESSON
 	
-	public Iterator<Lesson> getLessonInDate(LocalDate date) throws DaoConnectionException, LessonDaoException {
+	public Iterator<Lesson> getLessonInDate(LocalDate date) throws DaoConnectionException, LessonDaoException, SchoolClassDaoException {
 		return daoFactory.createLessonDao().getLessonsInDay(date, getSchoolClass());
 	}
 	
