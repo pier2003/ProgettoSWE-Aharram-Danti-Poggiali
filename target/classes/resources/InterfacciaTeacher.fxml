@@ -6,25 +6,16 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="979.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SceneManager">
+<HBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="979.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="resources.SceneManager">
    <children>
-      <AnchorPane prefHeight="574.0" prefWidth="342.0">
+      <AnchorPane prefHeight="668.0" prefWidth="360.0">
          <children>
-            <Button fx:id="removeButton" layoutX="190.0" layoutY="68.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="135.0" stylesheets="@InterfacciaTeacherFrontEnd.css" text="Show Grades">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font></Button>
-            <Button fx:id="searchButton" layoutX="8.0" layoutY="378.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="144.0" stylesheets="@InterfacciaTeacherFrontEnd.css" text="Add Grade">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font></Button>
-            <Button fx:id="searchFaculty" layoutX="7.0" layoutY="431.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="175.0" stylesheets="@InterfacciaTeacherFrontEnd.css" text="Add disciplinary note">
+            <Button fx:id="removeButton" layoutX="11.0" layoutY="156.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" stylesheets="@InterfacciaTeacherFrontEnd.css" text="Show grades">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font></Button>
@@ -33,37 +24,58 @@
                   <Font name="Arial Bold" size="16.0" />
                </font>
             </Text>
-            <Label fx:id="studentsCount" layoutX="91.0" layoutY="10.0" text="NameTeacher">
+            <Label fx:id="studentsCount" layoutX="89.0" layoutY="10.0" text="NameTeacher">
                <font>
                   <Font name="Arial Bold" size="16.0" />
                </font>
             </Label>
-            <Label layoutX="9.0" layoutY="295.0" text="Student Selected:">
+            <ChoiceBox layoutX="11.0" layoutY="79.0" prefHeight="26.0" prefWidth="150.0" stylesheets="@InterfacciaTeacherFrontEnd.css" />
+            <Label layoutX="35.0" layoutY="50.0" text="My teachings:">
                <font>
                   <Font name="Arial Bold" size="16.0" />
                </font></Label>
-            <ChoiceBox layoutX="14.0" layoutY="69.0" prefHeight="19.0" prefWidth="150.0" stylesheets="@InterfacciaTeacherFrontEnd.css" />
-            <Label layoutX="20.0" layoutY="38.0" text="My classes:">
+            <Button fx:id="searchButton11" layoutX="10.0" layoutY="450.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" stylesheets="@InterfacciaTeacherFrontEnd.css" text="Lesson">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></Button>
+            <ChoiceBox layoutX="186.0" layoutY="79.0" prefHeight="26.0" prefWidth="150.0" stylesheets="@InterfacciaTeacherFrontEnd.css" />
+            <Label layoutX="217.0" layoutY="50.0" text="My classes:">
                <font>
                   <Font name="Arial Bold" size="16.0" />
-               </font></Label>
-            <Button fx:id="searchButton1" layoutX="7.0" layoutY="324.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="144.0" stylesheets="@InterfacciaTeacherFrontEnd.css" text="Set Attendance">
+               </font>
+            </Label>
+            <Button fx:id="searchButton111" layoutX="183.0" layoutY="450.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" stylesheets="@InterfacciaTeacherFrontEnd.css" text="Homework">
                <font>
                   <Font name="System Bold" size="12.0" />
-               </font></Button>
-            <Button fx:id="searchButton11" layoutX="17.0" layoutY="120.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="128.0" stylesheets="@InterfacciaTeacherFrontEnd.css" text="Add lecture">
+               </font>
+            </Button>
+            <Button fx:id="removeButton1" layoutX="184.0" layoutY="156.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" stylesheets="@InterfacciaTeacherFrontEnd.css" text="Show students">
                <font>
                   <Font name="System Bold" size="12.0" />
-               </font></Button>
-            <TextArea layoutX="17.0" layoutY="175.0" prefHeight="110.0" prefWidth="306.0" />
-            <TextArea layoutX="11.0" layoutY="492.0" prefHeight="110.0" prefWidth="317.0" />
-            <Button fx:id="searchFaculty1" layoutX="200.0" layoutY="431.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="128.0" stylesheets="@InterfacciaTeacherFrontEnd.css" text="View diary">
+               </font>
+            </Button>
+            <Button fx:id="searchButton112" layoutX="10.0" layoutY="527.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" stylesheets="@InterfacciaTeacherFrontEnd.css" text="Meeting">
                <font>
                   <Font name="System Bold" size="12.0" />
-               </font></Button>
-            <ChoiceBox layoutX="177.0" layoutY="324.0" prefWidth="150.0" stylesheets="@InterfacciaTeacherFrontEnd.css" />
-            <ChoiceBox layoutX="178.0" layoutY="377.0" prefWidth="150.0" stylesheets="@InterfacciaTeacherFrontEnd.css" />
-            <DatePicker layoutX="158.0" layoutY="129.0" />
+               </font>
+            </Button>
+            <Text layoutX="14.0" layoutY="339.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Student selected: " wrappingWidth="143.19999999999993">
+               <font>
+                  <Font name="Arial Bold" size="16.0" />
+               </font>
+            </Text>
+            <Button fx:id="removeButton2" layoutX="11.0" layoutY="244.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" stylesheets="@InterfacciaTeacherFrontEnd.css" text="Show absences">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            <DatePicker layoutX="171.0" layoutY="252.0" />
+            <Button fx:id="removeButton3" layoutX="10.0" layoutY="368.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" stylesheets="@InterfacciaTeacherFrontEnd.css" text="Set attendace">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            <ChoiceBox layoutX="186.0" layoutY="368.0" prefHeight="40.0" prefWidth="150.0" stylesheets="@InterfacciaTeacherFrontEnd.css" />
          </children>
       </AnchorPane>
       <TableView fx:id="tableView" prefHeight="668.0" prefWidth="636.0">
