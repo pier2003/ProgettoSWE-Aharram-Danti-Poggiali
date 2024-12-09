@@ -104,11 +104,11 @@ public class AbsenceDaoDatabaseTest {
 	    Student nonExistentStudent = new Student(-1, "Inesistente", "Studente", student.getSchoolClass());
 
 	    assertThatThrownBy(() -> absenceDao.addAbsence(nonExistentStudent, LocalDate.of(2023, 11, 3)))
-	        .isInstanceOf(AbsenceDaoException.class);
+	        .isInstanceOf(StudentDaoException.class);
 	}
 	
 	@Test
-	public void testDeleteAbsence() throws SQLException, AbsenceDaoException, DaoConnectionException {
+	public void testDeleteAbsence() throws SQLException, AbsenceDaoException, DaoConnectionException, StudentDaoException {
 	    absenceDao.deleteAbsence(absence.getStudent(), absence.getDate());
 
 	    String selectAbsence = "SELECT id_student, date, justification FROM Absences "
@@ -135,7 +135,7 @@ public class AbsenceDaoDatabaseTest {
 
 	
 	@Test
-	public void testGetAbsencesByStudent() throws SQLException, AbsenceDaoException, DaoConnectionException {
+	public void testGetAbsencesByStudent() throws SQLException, AbsenceDaoException, DaoConnectionException, StudentDaoException {
 	    String insertAbsence = "INSERT INTO Absences (date, justification, id_student) VALUES (?, 0, ?)";
 	    try (PreparedStatement stmt = conn.prepareStatement(insertAbsence)) {
 	        stmt.setDate(1, Date.valueOf(LocalDate.of(2023, 11, 5)));
@@ -156,16 +156,16 @@ public class AbsenceDaoDatabaseTest {
 	}
 	
 	@Test
-	public void testGetAbsencesByStudent_ThrowsExceptionForNonExistentStudent() throws DaoConnectionException {
+	public void testGetAbsencesByStudent_ThrowsExceptionForNonExistentStudent() {
 	    Student nonExistentStudent = new Student(-1, "Inesistente", "Studente", student.getSchoolClass());
 	    
 	    assertThatThrownBy(() -> absenceDao.getAbsencesByStudent(nonExistentStudent))
-	        .isInstanceOf(AbsenceDaoException.class);
+	        .isInstanceOf(StudentDaoException.class);
 	}
 
 
 	@Test
-	public void testGetAbsencesByClassInDate() throws SQLException, AbsenceDaoException, DaoConnectionException {
+	public void testGetAbsencesByClassInDate() throws SQLException, AbsenceDaoException, SchoolClassDaoException {
 		String insertSecondStudentQuery = "INSERT INTO Students (username, password, name, surname, date_of_birth, class) "
 				+ "VALUES ('stu002', 'pass456', 'Luca', 'Bianchi', '2005-04-22', 'A1')";
 		conn.createStatement().executeUpdate(insertSecondStudentQuery);
@@ -199,13 +199,13 @@ public class AbsenceDaoDatabaseTest {
 	    SchoolClass nonExistentClass = new SchoolClass("Z9");
 	    
 	    assertThatThrownBy(() -> absenceDao.getAbsencesByClassInDate(nonExistentClass, LocalDate.of(2023, 11, 3)))
-	        .isInstanceOf(AbsenceDaoException.class);
+	        .isInstanceOf(SchoolClassDaoException.class);
 	}
 
 	
 
 	@Test
-	public void testCheckStudentAttendanceInDay() throws AbsenceDaoException, DaoConnectionException {
+	public void testCheckStudentAttendanceInDay() throws AbsenceDaoException, StudentDaoException {
 	    LocalDate existingAbsenceDate = absence.getDate();
 	    LocalDate nonExistingAbsenceDate = LocalDate.of(2023, 10, 10);
 	    
@@ -219,7 +219,7 @@ public class AbsenceDaoDatabaseTest {
 	    Student nonExistentStudent = new Student(-1, "Inesistente", "Studente", student.getSchoolClass());
 
 	    assertThatThrownBy(() -> absenceDao.checkStudentAttendanceInDay(nonExistentStudent, LocalDate.of(2023, 11, 3)))
-	        .isInstanceOf(AbsenceDaoException.class);
+	        .isInstanceOf(StudentDaoException.class);
 	}
 
 	@Test

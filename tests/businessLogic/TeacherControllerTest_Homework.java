@@ -16,6 +16,7 @@ import domainModel.TeachingAssignment;
 import orm.DaoConnectionException;
 import orm.HomeworkDao;
 import orm.HomeworkDaoException;
+import orm.SchoolClassDaoException;
 import orm.StudentDaoException;
 import orm.TeacherDaoException;
 
@@ -131,7 +132,7 @@ public class TeacherControllerTest_Homework {
 
 	@Test
 	public void testGetClassHomeworksSubmissionDate()
-			throws DaoConnectionException, HomeworkDaoException, StudentDaoException, TeacherDaoException {
+			throws DaoConnectionException, HomeworkDaoException, StudentDaoException, TeacherDaoException, SchoolClassDaoException {
 		homeworks = new ArrayList<>();
 		homework1 = new Homework(0, teachingAssignment, date, "Fare esercizi", date);
 		homework2 = new Homework(1, teachingAssignment, date, "Fare esercizi", date);

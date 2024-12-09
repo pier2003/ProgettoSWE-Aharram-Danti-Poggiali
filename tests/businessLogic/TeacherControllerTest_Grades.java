@@ -18,6 +18,7 @@ import orm.GradeDao;
 import orm.GradeDaoException;
 import orm.StudentDaoException;
 import orm.TeacherDaoException;
+import orm.TeachingAssignmentDaoException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class TeacherControllerTest_Grades {
 	}
 	
 	@Test
-	public void testGetAllStudentGradesByTeaching() throws GradeDaoException, DaoConnectionException {
+	public void testGetAllStudentGradesByTeaching() throws GradeDaoException, DaoConnectionException, StudentDaoException, TeachingAssignmentDaoException {
 		grades = new ArrayList<>();
 		grade1 = new Grade(1, student, teachingAssignment, date, 8, 1, "Ottimo lavoro");
 		grade2 = new Grade(2, student, teachingAssignment, date, 4, 1, "Non ha studiato abbastanza");

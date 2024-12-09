@@ -24,6 +24,7 @@ import orm.GradeDaoException;
 import orm.SchoolClassDaoException;
 import orm.StudentDaoException;
 import orm.TeacherDaoException;
+import orm.TeachingAssignmentDaoException;
 import strategyForGrade.ArithmeticGradeAverageStrategy;
 import strategyForGrade.GeometricGradeAverageStrategy;
 import strategyForGrade.GradeAverageStrategy;
@@ -56,7 +57,7 @@ public class GradeAvarageStrategyTest {
 	}
 	
 	@Test
-	public void testCalculateTeachingGradesAverageWithArithmeticAverage_StudentController() throws StudentDaoException, GradeDaoException, SchoolClassDaoException, DaoConnectionException {
+	public void testCalculateTeachingGradesAverageWithArithmeticAverage_StudentController() throws StudentDaoException, GradeDaoException, SchoolClassDaoException, DaoConnectionException, TeachingAssignmentDaoException {
 		ArrayList<Grade> grades = new ArrayList<Grade>();
 		Grade g1 = new Grade(0, student, teachingAssignment, null, 8.5, 1, null);
 		Grade g2 = new Grade(0, student, teachingAssignment, null, 7.25, 1, null);
@@ -78,7 +79,7 @@ public class GradeAvarageStrategyTest {
 	}
 	
 	@Test
-	public void testCalculateTeachingGradesAverageWithGeometricAverage_StudentController() throws StudentDaoException, GradeDaoException, SchoolClassDaoException, DaoConnectionException {
+	public void testCalculateTeachingGradesAverageWithGeometricAverage_StudentController() throws StudentDaoException, GradeDaoException, SchoolClassDaoException, DaoConnectionException, TeachingAssignmentDaoException {
 		ArrayList<Grade> grades = new ArrayList<Grade>();
 		Grade g1 = new Grade(0, student, teachingAssignment, null, 8.5, 1, null);
 		Grade g2 = new Grade(0, student, teachingAssignment, null, 7.25, 1, null);
@@ -101,7 +102,7 @@ public class GradeAvarageStrategyTest {
 	}
 	
 	@Test
-	public void testCalculateTeachingGradesAverageWithWeightedAverage_StudentController() throws StudentDaoException, GradeDaoException, SchoolClassDaoException, DaoConnectionException {
+	public void testCalculateTeachingGradesAverageWithWeightedAverage_StudentController() throws StudentDaoException, GradeDaoException, SchoolClassDaoException, DaoConnectionException, TeachingAssignmentDaoException {
 		ArrayList<Grade> grades = new ArrayList<Grade>();
 		Grade g1 = new Grade(0, student, teachingAssignment, null, 8.5, 2, null);
 		Grade g2 = new Grade(0, student, teachingAssignment, null, 7.25, 3, null);
@@ -200,7 +201,7 @@ public class GradeAvarageStrategyTest {
 	}
 	
 	@Test
-    public void testCalculateStudentTeachingGradeAverage_TeacherController() throws GradeDaoException, DaoConnectionException {
+    public void testCalculateStudentTeachingGradeAverage_TeacherController() throws GradeDaoException, DaoConnectionException, StudentDaoException, TeachingAssignmentDaoException {
         ArrayList<Grade> grades = new ArrayList<>();
 		Grade g1 = new Grade(0, student, teachingAssignment, null, 8, 1, null);
 		Grade g2 = new Grade(0, student, teachingAssignment, null, 7, 1, null);

@@ -28,6 +28,7 @@ import orm.LessonDaoException;
 import orm.SchoolClassDaoException;
 import orm.StudentDaoException;
 import orm.TeacherDaoException;
+import orm.TeachingAssignmentDaoException;
 import strategyForGrade.GradeAverageStrategy;
 
 public class TeacherController {
@@ -64,12 +65,12 @@ public class TeacherController {
 	
 	//GRADES
 	
-	public Iterator<Grade> getAllStudentGradesByTeaching(Student student, TeachingAssignment teaching) throws GradeDaoException, DaoConnectionException {
+	public Iterator<Grade> getAllStudentGradesByTeaching(Student student, TeachingAssignment teaching) throws GradeDaoException, DaoConnectionException, StudentDaoException, TeachingAssignmentDaoException {
 		return daoFactory.createGradeDao().getStudentGradesByTeaching(student, teaching);
 	}
 	
 	public void assignGradeToStudentInDate(double value, String description, TeachingAssignment teaching, Student student, LocalDate date)
-			throws GradeDaoException, InvalidGradeValueException, DaoConnectionException {
+			throws GradeDaoException, InvalidGradeValueException, DaoConnectionException, StudentDaoException {
 		if (value >= 1 && value <= 10) {
 			daoFactory.createGradeDao().addNewGrade(value, description, teaching, student, date);
 		} else {
@@ -79,7 +80,7 @@ public class TeacherController {
 
 	public void assignGradeToStudentInDateWithWeight(double value, int weight, String description, TeachingAssignment teaching,
 			Student student, LocalDate date)
-			throws GradeDaoException, NegativeWeightException, InvalidGradeValueException, DaoConnectionException {
+			throws GradeDaoException, NegativeWeightException, InvalidGradeValueException, DaoConnectionException, StudentDaoException {
 		if ((value >= 1 && value <= 10) && (weight >= 0)) {
 			daoFactory.createGradeDao().addNewGradeWithWeight(value, weight, description, teaching, student, date);
 		} else {
@@ -106,18 +107,18 @@ public class TeacherController {
 		daoFactory.createGradeDao().deleteGrade(grade);
 	}
 	
-	public double calculateStudentTeachingGradeAverage(Student student, TeachingAssignment teaching, GradeAverageStrategy gradeAverageStrategy) throws GradeDaoException, DaoConnectionException {
+	public double calculateStudentTeachingGradeAverage(Student student, TeachingAssignment teaching, GradeAverageStrategy gradeAverageStrategy) throws GradeDaoException, DaoConnectionException, StudentDaoException, TeachingAssignmentDaoException {
 		return gradeAverageStrategy.getAverage(getAllStudentGradesByTeaching(student, teaching));
 	}
 
 	
 	//REPORTS
 	
-	public Iterator<DisciplinaryReport> getStudentDisciplinaryReports(Student student) throws DisciplinaryReportException, DaoConnectionException{
+	public Iterator<DisciplinaryReport> getStudentDisciplinaryReports(Student student) throws DisciplinaryReportException, DaoConnectionException, StudentDaoException{
 		return daoFactory.createDisciplinaryReportDao().getDisciplinaryReportsByStudent(student);	
 	}
 	
-	public void assignDisciplinaryReportToStudentInDate(Student student, String description, LocalDate date) throws DisciplinaryReportException, DaoConnectionException {
+	public void assignDisciplinaryReportToStudentInDate(Student student, String description, LocalDate date) throws DisciplinaryReportException, DaoConnectionException, StudentDaoException, TeacherDaoException {
 		daoFactory.createDisciplinaryReportDao().addNewReport(teacher, student, description, date);
 	}
 	
@@ -132,19 +133,19 @@ public class TeacherController {
 	
 	//ABSENCES
 
-	public Iterator<Absence> getAbsencesByClassInDate(SchoolClass schoolClass, LocalDate date) throws AbsenceDaoException, DaoConnectionException {
+	public Iterator<Absence> getAbsencesByClassInDate(SchoolClass schoolClass, LocalDate date) throws AbsenceDaoException, DaoConnectionException, SchoolClassDaoException {
 		return daoFactory.createAbsenceDao().getAbsencesByClassInDate(schoolClass, date);
 	}
 
-	public Iterator<Absence> getAbsencesByStudent(Student student) throws AbsenceDaoException, DaoConnectionException {
+	public Iterator<Absence> getAbsencesByStudent(Student student) throws AbsenceDaoException, DaoConnectionException, StudentDaoException {
 		return daoFactory.createAbsenceDao().getAbsencesByStudent(student);
 	}
 
-	public void assignAbsenceToStudentInDate(Student student, LocalDate date) throws AbsenceDaoException, DaoConnectionException {
+	public void assignAbsenceToStudentInDate(Student student, LocalDate date) throws AbsenceDaoException, DaoConnectionException, StudentDaoException {
 		daoFactory.createAbsenceDao().addAbsence(student, date);
 	}
 
-	public void deleteAbsence(Student student, LocalDate date) throws AbsenceDaoException, DaoConnectionException {
+	public void deleteAbsence(Student student, LocalDate date) throws AbsenceDaoException, DaoConnectionException, StudentDaoException {
 		daoFactory.createAbsenceDao().deleteAbsence(student, date);
 	}
 
@@ -176,11 +177,11 @@ public class TeacherController {
 		}
 	}
 
-	public Iterator<Homework> getClassHomeworksSubmissionDate(LocalDate date, SchoolClass schoolClass) throws DaoConnectionException, HomeworkDaoException {
+	public Iterator<Homework> getClassHomeworksSubmissionDate(LocalDate date, SchoolClass schoolClass) throws DaoConnectionException, HomeworkDaoException, SchoolClassDaoException {
 		return daoFactory.createHomeworkDao().getHomeworksBySubmissionDate(date, schoolClass);
 	}
 	
-	public void deleteHomework(Homework homework) throws IllegalHomeworkAccessException {
+	public void deleteHomework(Homework homework) throws IllegalHomeworkAccessException, HomeworkDaoException {
 		if (homework.getTeaching().getTeacher().equals(teacher)) {
 			daoFactory.createHomeworkDao().deleteHomework(homework);
 		}

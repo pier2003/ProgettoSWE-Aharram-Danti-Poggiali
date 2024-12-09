@@ -16,9 +16,9 @@ public interface HomeworkDao {
 	
 	void editHomeworkSubmissionDate(Homework homework, LocalDate submissionDate) throws HomeworkDaoException;
 
-	Iterator<Homework> getHomeworksBySubmissionDate(LocalDate date, SchoolClass schoolClass)throws DaoConnectionException, HomeworkDaoException;
+	Iterator<Homework> getHomeworksBySubmissionDate(LocalDate date, SchoolClass schoolClass) throws HomeworkDaoException, SchoolClassDaoException;
 
-	void deleteHomework(Homework homework);
+	void deleteHomework(Homework homework) throws HomeworkDaoException;
 
 
 }

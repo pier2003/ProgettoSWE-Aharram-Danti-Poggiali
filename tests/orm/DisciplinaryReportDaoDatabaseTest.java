@@ -95,7 +95,7 @@ public class DisciplinaryReportDaoDatabaseTest {
 	}
 
 	@Test
-	public void testAddNewReport() throws DisciplinaryReportException, DaoConnectionException, SQLException {
+	public void testAddNewReport() throws DisciplinaryReportException, SQLException, StudentDaoException, TeacherDaoException {
 		DisciplinaryReport expectedReport = new DisciplinaryReport(0, student, teacher, LocalDate.of(2023, 11, 21) , "Parla durante la lezione");
 
 		disciplinaryReportDaoDatabase.addNewReport(teacher, student, 
@@ -122,7 +122,7 @@ public class DisciplinaryReportDaoDatabaseTest {
 
 	    assertThatThrownBy(() -> disciplinaryReportDaoDatabase.addNewReport(invalidReport.getTeacher(), 
 	    		student, invalidReport.getDescription(), invalidReport.getDate()))
-	        .isInstanceOf(DisciplinaryReportException.class);
+	        .isInstanceOf(TeacherDaoException.class);
 	}
 	
 	@Test
@@ -130,12 +130,12 @@ public class DisciplinaryReportDaoDatabaseTest {
 	    DisciplinaryReport invalidReport = new DisciplinaryReport(0, new Student(-1, "Invalid", "Student", new SchoolClass("1B")), teacher, LocalDate.of(2023, 11, 23), "Fuma durante la pausa");
 
 	    assertThatThrownBy(() -> disciplinaryReportDaoDatabase.addNewReport(teacher, invalidReport.getStudent(), invalidReport.getDescription(), invalidReport.getDate()))
-	        .isInstanceOf(DisciplinaryReportException.class);
+	        .isInstanceOf(StudentDaoException.class);
 	}
 
 
 	@Test
-	public void testGetDisciplinaryReportsByStudent() throws DisciplinaryReportException, DaoConnectionException, SQLException {
+	public void testGetDisciplinaryReportsByStudent() throws DisciplinaryReportException, SQLException, StudentDaoException {
 		LocalDate newDate = LocalDate.of(2023, 11, 17);
 		
 		try (PreparedStatement statement = conn.prepareStatement(
@@ -170,7 +170,7 @@ public class DisciplinaryReportDaoDatabaseTest {
 	    Student newStudent = new Student(-1, "Luca", "Verdi", new SchoolClass("2B"));
 	    
 	    assertThatThrownBy(() -> disciplinaryReportDaoDatabase.getDisciplinaryReportsByStudent(newStudent))
-	    .isInstanceOf(DisciplinaryReportException.class);
+	    .isInstanceOf(StudentDaoException.class);
 	}
 
 	

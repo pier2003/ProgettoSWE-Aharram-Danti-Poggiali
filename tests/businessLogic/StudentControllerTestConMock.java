@@ -135,7 +135,7 @@ public class StudentControllerTestConMock {
 	}
 	
 	@Test
-	public void testGetGradesByTeaching() throws StudentDaoException, SchoolClassDaoException, DaoConnectionException, GradeDaoException {
+	public void testGetGradesByTeaching() throws StudentDaoException, SchoolClassDaoException, DaoConnectionException, GradeDaoException, TeachingAssignmentDaoException {
 		TeachingAssignment teachingAssignment = new TeachingAssignment(1, "matematica", null, schoolClass);
 		ArrayList<Grade> grades = new ArrayList<Grade>();
 		grades.add(grade1);
@@ -224,7 +224,7 @@ public class StudentControllerTestConMock {
 	}
 
 	@Test
-	public void testGetAllStudentAbsences() throws AbsenceDaoException, DaoConnectionException {
+	public void testGetAllStudentAbsences() throws AbsenceDaoException, DaoConnectionException, StudentDaoException {
 		ArrayList<Absence> absences = new ArrayList<Absence>();
 		Absence absence1 = new Absence(student, LocalDate.of(2024, 06, 20), false);
 		Absence absence2 = new Absence(student, LocalDate.of(2024, 05, 20),  false);
@@ -242,7 +242,7 @@ public class StudentControllerTestConMock {
 	}
 	
 	@Test
-	public void testCheckStudentAttendanceInDay() throws AbsenceDaoException, DaoConnectionException {
+	public void testCheckStudentAttendanceInDay() throws AbsenceDaoException, DaoConnectionException, StudentDaoException {
 		expect(AbsenceDaoMock.checkStudentAttendanceInDay(student, LocalDate.of(2024, 12, 10))).andReturn(true).once();
 		
 		replay(factoryMock, AbsenceDaoMock);

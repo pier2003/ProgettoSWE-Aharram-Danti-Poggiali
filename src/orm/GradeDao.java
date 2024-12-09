@@ -10,24 +10,22 @@ import domainModel.TeachingAssignment;
 
 public interface GradeDao {
 
-	default void addNewGrade(double value, String description, TeachingAssignment teaching, Student student, LocalDate date) throws GradeDaoException, DaoConnectionException {
+	default void addNewGrade(double value, String description, TeachingAssignment teaching, Student student, LocalDate date) throws GradeDaoException, StudentDaoException {
 		addNewGradeWithWeight(value, 1, description, teaching, student, date);
 	}
 	
-	void addNewGradeWithWeight(double value, int weight, String description, TeachingAssignment teaching, Student student, LocalDate date) throws GradeDaoException, DaoConnectionException;
+	void addNewGradeWithWeight(double value, int weight, String description, TeachingAssignment teaching, Student student, LocalDate date) throws GradeDaoException, StudentDaoException;
 	
-	void deleteGrade(Grade grade) throws GradeDaoException, DaoConnectionException;
+	void deleteGrade(Grade grade) throws GradeDaoException;
 	
-	void editGradeValue(Grade grade, double value) throws GradeDaoException, DaoConnectionException;
+	void editGradeValue(Grade grade, double value) throws GradeDaoException;
 	
-	void editGradeWeight(Grade oldGrade, int weigth) throws GradeDaoException, DaoConnectionException;
+	void editGradeWeight(Grade oldGrade, int weigth) throws GradeDaoException;
 	
-	void editGradeDescription(Grade oldGrade, String description) throws GradeDaoException, DaoConnectionException;
+	void editGradeDescription(Grade oldGrade, String description) throws GradeDaoException;
 	
-	Grade getGradeById(int id_grade) throws GradeDaoException, DaoConnectionException;
-	
-	Iterator<Grade> getAllStudentGrades(Student student) throws GradeDaoException, DaoConnectionException;
+	Iterator<Grade> getAllStudentGrades(Student student) throws GradeDaoException, StudentDaoException;
 
-	Iterator<Grade> getStudentGradesByTeaching(Student student, TeachingAssignment teaching) throws GradeDaoException, DaoConnectionException;
+	Iterator<Grade> getStudentGradesByTeaching(Student student, TeachingAssignment teaching) throws GradeDaoException, StudentDaoException, TeachingAssignmentDaoException;
 
 }
