@@ -14,10 +14,5 @@
 	<classpathentry kind="lib" path="libs/sqlite-jdbc-3.47.1.0.jar"/>
 	<classpathentry kind="lib" path="libs/byte-buddy-1.15.10.jar"/>
 	<classpathentry kind="lib" path="libs/easymock-5.5.0.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFX">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

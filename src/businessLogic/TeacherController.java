@@ -51,12 +51,6 @@ public class TeacherController {
 		return daoFactory.createTeachingAssignmentDao().getAllTeacherTeachings(teacher);
 	}
 	
-	//SCHOOLCLASS
-
-	public Iterator<SchoolClass> getClassByTeaching(TeachingAssignment teachingAssignment) throws SchoolClassDaoException, DaoConnectionException {
-		return daoFactory.createSchoolClassDao().getAllSchoolClassesByTeaching(teachingAssignment);
-	}
-	
 	//STUDENTS
 	
 	public Iterator<Student> getStudentsByClass(SchoolClass schoolClass) throws StudentDaoException, DaoConnectionException {

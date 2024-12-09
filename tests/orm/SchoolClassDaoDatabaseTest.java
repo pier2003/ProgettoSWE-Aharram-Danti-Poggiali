@@ -1,26 +1,21 @@
 package orm;
 
-import static org.assertj.core.api.Assertions.assertThat; 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import domainModel.SchoolClass;
-import domainModel.Student;
-import domainModel.Teacher;
-import utils.TestDataUtil;
 
 public class SchoolClassDaoDatabaseTest {
 	private Connection conn;
 	private String url = "jdbc:sqlite:database/testDB.db";
-	private SchoolClassDao schoolClassDao;
+	private SchoolClassDaoDatabase schoolClassDao;
 	
 	@Before
 	public void openConnection() throws SQLException {
@@ -62,59 +57,17 @@ public class SchoolClassDaoDatabaseTest {
 	
 	@Test
 	public void testGetSchoolClassByName() throws SQLException, SchoolClassDaoException, DaoConnectionException {
-		String name = "1A"; 
-		ResultSet rs = conn.prepareStatement("SELECT * FROM Classes WHERE name = '" +name+ "';").executeQuery();
-		rs.next();
-		SchoolClass schoolClassExpected = new SchoolClass(rs.getString("name"));
+		String name = "1A";
+		SchoolClass schoolClassExpected = new SchoolClass(name);
 		SchoolClass  schoolClassActual = schoolClassDao.getSchoolClassByName(name);
 		assertThat(schoolClassActual).isEqualTo(schoolClassExpected);	
 	}
 	
 	@Test
-	public void testGetSchoolClassByStudent() throws StudentDaoException, SQLException, SchoolClassDaoException, DaoConnectionException {
-		String username = "stu001";
-		int id = getStudentId(username); 
-		StudentDaoDatabase studentDaoDatabase = new StudentDaoDatabase(conn);
-		Student student = studentDaoDatabase.getStudentById(id);
-		ResultSet rs = conn.prepareStatement("SELECT * FROM Students WHERE id_student = " + student.getId() + ";").executeQuery();
-		rs.next();
-		SchoolClass schoolClassExpected = new SchoolClass(rs.getString("class"));
-		SchoolClass schoolClassActual = schoolClassDao.getSchoolClassByStudent(student);
-		assertThat(schoolClassActual.getClassName()).isEqualTo(schoolClassExpected.getClassName());			
-	}
-	
-	private int getStudentId(String username) throws SQLException {
-		String getStudentIdQuery = "SELECT id_student FROM Students WHERE username = '" + username + "';";
-		ResultSet rs = conn.createStatement().executeQuery(getStudentIdQuery);
-		rs.next();
-		int studentId = rs.getInt("id_student");
-		return studentId;
-	}
-	
-	@Test
-	public void testGetAllSchoolClassesByTeacher() throws SQLException, SchoolClassDaoException, DaoConnectionException, TeacherDaoException {
-		TeacherDao teacherDao = new TeacherDaoDatabase(conn);
-		String username = "tch001";
-		int teacherId = getTeacherId(username);
-		Teacher teacher = teacherDao.getTeacherById(teacherId);
-		List<SchoolClass> classesExpectedList = new ArrayList<SchoolClass>();
-		ResultSet rs = conn.prepareStatement("SELECT class_name FROM Teachers NATURAL JOIN Teachings WHERE id_teacher = " + teacher.getId() + ";").executeQuery();
-		while(rs.next()) {
-			classesExpectedList.add(new SchoolClass(rs.getString("class_name")));
-		}
-		Iterator<SchoolClass> classesActual = schoolClassDao.getAllSchoolClassesByTeacher(teacher);
-		List<SchoolClass> classesActualList = new ArrayList<SchoolClass>();
-		classesActual.forEachRemaining(schoolClass -> classesActualList.add(schoolClass));
-		assertThat(classesActualList).containsExactlyInAnyOrderElementsOf(classesExpectedList);
-		
-	}
-	
-	private int getTeacherId(String username) throws SQLException {
-		String getTeacherIdQuery = "SELECT id_teacher FROM Teachers WHERE username = '" + username + "';";
-		ResultSet rs = conn.createStatement().executeQuery(getTeacherIdQuery);
-		rs.next();
-		int teacherId = rs.getInt("id_teacher");
-		return teacherId;
+	public void testGetSchoolClassByName_WithWrongName() throws SQLException, SchoolClassDaoException, DaoConnectionException {
+		String name = "2A";
+		assertThatThrownBy(() -> schoolClassDao.getSchoolClassByName(name))
+		.isInstanceOf(SchoolClassDaoException.class).hasMessage("School class dosen't exist.");
 	}
 	
 	@After

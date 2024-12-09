@@ -27,7 +27,6 @@ public class TeacherControllerTest_Teacher {
 	private DaoFactory factoryMock;
 	private StudentDao studentDaoMock;
 	private Teacher teacher;
-	private SchoolClassDao schoolClassDaoMock;
 	private TeacherController teacherController;
 	private TeachingAssignmentDao teachingAssignmentDaoMock;
 
@@ -46,12 +45,10 @@ public class TeacherControllerTest_Teacher {
 	public void setup() throws StudentDaoException, TeacherDaoException, DaoConnectionException {
 		factoryMock = createMock(DaoFactory.class);
 		studentDaoMock = createMock(StudentDao.class);
-		schoolClassDaoMock = createMock(SchoolClassDao.class);
 		teachingAssignmentDaoMock = createMock(TeachingAssignmentDao.class);
 
 		teacher = new Teacher(1, "Mario", "Rossi");
 
-		expect(factoryMock.createSchoolClassDao()).andReturn(schoolClassDaoMock).anyTimes();
 		expect(factoryMock.createStudentDao()).andReturn(studentDaoMock).anyTimes();
 		expect(factoryMock.createTeachingAssignmentDao()).andReturn(teachingAssignmentDaoMock).anyTimes();
 		
@@ -96,20 +93,6 @@ public class TeacherControllerTest_Teacher {
 		verify(factoryMock, teachingAssignmentDaoMock);
 	}
 
-	
-	@Test
-	public void testGetClassByTeaching()
-			throws SchoolClassDaoException, DaoConnectionException, StudentDaoException, TeacherDaoException {
-		Iterator<SchoolClass> classesIterator = classes.iterator();
-
-		expect(schoolClassDaoMock.getAllSchoolClassesByTeaching(teachingAssignment1)).andReturn(classesIterator).once();
-
-		replay(factoryMock, schoolClassDaoMock);
-
-		assertThat(teacherController.getClassByTeaching(teachingAssignment1)).toIterable().containsExactlyInAnyOrder(schoolClass1, schoolClass2);
-
-		verify(factoryMock, schoolClassDaoMock);
-	}
 
 	@Test
 	public void testGetStudentByClass() throws DaoConnectionException, StudentDaoException, TeacherDaoException {
