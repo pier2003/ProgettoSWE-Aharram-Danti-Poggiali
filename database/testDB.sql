@@ -89,6 +89,7 @@ CREATE TABLE IF NOT EXISTS MeetingsAvailability (
     date DATE NOT NULL,
     hour TEXT NOT NULL,
     id_teacher INTEGER NOT NULL,
+    isBooked INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (date, hour, id_teacher),
     FOREIGN KEY (id_teacher) REFERENCES Teachers(id_teacher) ON DELETE CASCADE
 );
