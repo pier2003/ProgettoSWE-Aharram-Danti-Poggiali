@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="979.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="resources.SceneManager">
+<HBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="979.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.InterfaceTeacherManager">
    <children>
       <AnchorPane prefHeight="668.0" prefWidth="360.0">
          <children>
@@ -34,7 +34,7 @@
                <font>
                   <Font name="Arial Bold" size="16.0" />
                </font></Label>
-            <Button fx:id="searchButton11" layoutX="10.0" layoutY="450.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" stylesheets="@InterfacciaTeacherFrontEnd.css" text="Lesson">
+            <Button fx:id="btnLesson" layoutX="10.0" layoutY="450.0" mnemonicParsing="false" onAction="#openLesson" prefHeight="40.0" prefWidth="150.0" stylesheets="@InterfacciaTeacherFrontEnd.css" text="Lesson">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font></Button>
@@ -44,7 +44,7 @@
                   <Font name="Arial Bold" size="16.0" />
                </font>
             </Label>
-            <Button fx:id="searchButton111" layoutX="183.0" layoutY="450.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" stylesheets="@InterfacciaTeacherFrontEnd.css" text="Homework">
+            <Button fx:id="btnHomework" layoutX="183.0" layoutY="450.0" mnemonicParsing="false" onAction="#openHomework" prefHeight="40.0" prefWidth="150.0" stylesheets="@InterfacciaTeacherFrontEnd.css" text="Homework">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
@@ -54,7 +54,7 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </Button>
-            <Button fx:id="searchButton112" layoutX="10.0" layoutY="527.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" stylesheets="@InterfacciaTeacherFrontEnd.css" text="Meeting">
+            <Button fx:id="btnMeeting" layoutX="10.0" layoutY="527.0" mnemonicParsing="false" onAction="#openMeeting" prefHeight="40.0" prefWidth="150.0" stylesheets="@InterfacciaTeacherFrontEnd.css" text="Meeting">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>

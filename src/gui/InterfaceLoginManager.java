@@ -11,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
 
 import businessLogic.LoginController;
 
-public class SceneManager {
+public class InterfaceLoginManager {
 	@FXML
 	private TextField txtUsername;
 	@FXML
