@@ -14,6 +14,7 @@ import domainModel.Teacher;
 import orm.AbsenceDao;
 import orm.AbsenceDaoException;
 import orm.DaoConnectionException;
+import orm.SchoolClassDaoException;
 import orm.StudentDaoException;
 import orm.TeacherDaoException;
 
@@ -58,7 +59,7 @@ public class TeacherControllerTest_Absences {
 	
 	@Test
 	public void testGetAbsencesByClassInDate()
-			throws AbsenceDaoException, DaoConnectionException, StudentDaoException, TeacherDaoException {
+			throws AbsenceDaoException, DaoConnectionException, StudentDaoException, TeacherDaoException, SchoolClassDaoException {
 		Iterator<Absence> absencesIterator = absences.iterator();
 
 		expect(absenceDaoMock.getAbsencesByClassInDate(schoolClass, date)).andReturn(absencesIterator).once();

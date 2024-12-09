@@ -23,8 +23,8 @@ public class AbsenceDaoDatabase implements AbsenceDao {
 	}
 
 	@Override
-	public void addAbsence(Student student, LocalDate date) throws AbsenceDaoException {
-	    checkStudentExist(student);
+	public void addAbsence(Student student, LocalDate date) throws AbsenceDaoException, StudentDaoException {
+		DaoUtils.checkStudentExist(student, conn);
 	    String query = "INSERT INTO Absences (date, justification, id_student) VALUES (?, ?, ?)";
 	    try (PreparedStatement stmt = conn.prepareStatement(query)) {
 	        stmt.setDate(1, Date.valueOf(date));       
@@ -37,8 +37,8 @@ public class AbsenceDaoDatabase implements AbsenceDao {
 	}
 
 	@Override
-	public void deleteAbsence(Student student, LocalDate date) throws AbsenceDaoException {
-	    checkStudentExist(student);
+	public void deleteAbsence(Student student, LocalDate date) throws AbsenceDaoException, StudentDaoException {
+		DaoUtils.checkStudentExist(student, conn);
 	    String query = "DELETE FROM Absences WHERE date = ? AND id_student = ?";
 	    
 	    try (PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -58,9 +58,9 @@ public class AbsenceDaoDatabase implements AbsenceDao {
 
 	@Override
 	public Iterator<Absence> getAbsencesByClassInDate(SchoolClass schoolClass, LocalDate date)
-	        throws AbsenceDaoException {
+	        throws AbsenceDaoException, SchoolClassDaoException {
 
-	    checkScoolClassExist(schoolClass);
+		DaoUtils.checkScoolClassExist(schoolClass, conn);
 	    List<Absence> absences = new ArrayList<>();
 	    StudentDaoDatabase studentDaoDatabase = new StudentDaoDatabase(conn);
 	    
@@ -89,9 +89,9 @@ public class AbsenceDaoDatabase implements AbsenceDao {
 	}
 
 	@Override
-	public boolean checkStudentAttendanceInDay(Student student, LocalDate date) throws AbsenceDaoException {
+	public boolean checkStudentAttendanceInDay(Student student, LocalDate date) throws AbsenceDaoException, StudentDaoException {
 	    try {
-	        checkStudentExist(student);
+	    	DaoUtils.checkStudentExist(student, conn);
 	        String query = "SELECT * FROM Absences WHERE id_student = ? AND date = ?;";
 	        try (PreparedStatement stmt = conn.prepareStatement(query)) {
 	            stmt.setInt(1, student.getId());
@@ -101,17 +101,17 @@ public class AbsenceDaoDatabase implements AbsenceDao {
 	                return rs.next();
 	            }
 	        }
-	    } catch (SQLException | AbsenceDaoException e) {
+	    } catch (SQLException e) {
 	        throw new AbsenceDaoException("Database error while fetching absence data.");
 	    }
 	}
 
 
 	@Override
-	public Iterator<Absence> getAbsencesByStudent(Student student) throws AbsenceDaoException {
+	public Iterator<Absence> getAbsencesByStudent(Student student) throws AbsenceDaoException, StudentDaoException {
 	    ArrayList<Absence> absences = new ArrayList<>();
 
-	    checkStudentExist(student);
+	    DaoUtils.checkStudentExist(student, conn);
 
 	    String query = "SELECT date, justification FROM Absences WHERE id_student = ?";
 	    try (PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -150,25 +150,6 @@ public class AbsenceDaoDatabase implements AbsenceDao {
 		}
 		catch (SQLException e) {
 	        throw new AbsenceDaoException("Database error while fetching absence data.");
-		}
-	}
-
-
-	private void checkStudentExist(Student student) throws AbsenceDaoException {
-		StudentDaoDatabase studentDaoDatabase = new StudentDaoDatabase(conn);
-		try {
-			studentDaoDatabase.getStudentById(student.getId());
-		} catch (StudentDaoException e) {
-			throw new AbsenceDaoException("Student doesn't exist.");
-		}
-	}
-
-	private void checkScoolClassExist(SchoolClass schoolClass) throws AbsenceDaoException {
-		SchoolClassDaoDatabase schoolClassDaoDatabase = new SchoolClassDaoDatabase(conn);
-		try {
-			schoolClassDaoDatabase.getSchoolClassByName(schoolClass.getClassName());
-		} catch (SchoolClassDaoException e) {
-			throw new AbsenceDaoException("Class with name: " + schoolClass.getClassName() + " does not exist.");
 		}
 	}
 

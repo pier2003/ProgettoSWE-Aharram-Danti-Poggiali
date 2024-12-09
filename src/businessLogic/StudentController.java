@@ -52,25 +52,25 @@ public class StudentController {
 	
 	//GRADES
 	
-	public Iterator<Grade> getGradesByTeaching(TeachingAssignment teaching) throws GradeDaoException, DaoConnectionException {
+	public Iterator<Grade> getGradesByTeaching(TeachingAssignment teaching) throws GradeDaoException, DaoConnectionException, StudentDaoException, TeachingAssignmentDaoException {
 		return daoFactory.createGradeDao().getStudentGradesByTeaching(student, teaching);
 	}
 	
-	public Iterator<Grade> getAllStudentGrades() throws GradeDaoException, DaoConnectionException {
+	public Iterator<Grade> getAllStudentGrades() throws GradeDaoException, DaoConnectionException, StudentDaoException {
 		return daoFactory.createGradeDao().getAllStudentGrades(student);
 	}
 	
-	public double calculateTeachingGradeAverage(TeachingAssignment teaching, GradeAverageStrategy gradeAverageStrategy) throws GradeDaoException, DaoConnectionException {
+	public double calculateTeachingGradeAverage(TeachingAssignment teaching, GradeAverageStrategy gradeAverageStrategy) throws GradeDaoException, DaoConnectionException, StudentDaoException, TeachingAssignmentDaoException {
 		return gradeAverageStrategy.getAverage(getGradesByTeaching(teaching));
 	}
 	
-	public double calculateTotalGradeAverage(GradeAverageStrategy gradeAverageStrategy) throws GradeDaoException, DaoConnectionException {
+	public double calculateTotalGradeAverage(GradeAverageStrategy gradeAverageStrategy) throws GradeDaoException, DaoConnectionException, StudentDaoException {
 		return gradeAverageStrategy.getAverage(getAllStudentGrades());
 	}
 	
 	//REPORTS
 	
-	public Iterator<DisciplinaryReport> getDisciplinaryReports() throws DisciplinaryReportException, DaoConnectionException {
+	public Iterator<DisciplinaryReport> getDisciplinaryReports() throws DisciplinaryReportException, DaoConnectionException, StudentDaoException {
 		return daoFactory.createDisciplinaryReportDao().getDisciplinaryReportsByStudent(student);
 	}
 	
@@ -91,11 +91,11 @@ public class StudentController {
 	
 	//ABSENCES
 	
-	public Iterator<Absence> getAllStudentAbsences() throws AbsenceDaoException, DaoConnectionException {
+	public Iterator<Absence> getAllStudentAbsences() throws AbsenceDaoException, DaoConnectionException, StudentDaoException {
 		return daoFactory.createAbsenceDao().getAbsencesByStudent(student);
 	}
  	
-	public boolean checkStudentAttendanceInDay(LocalDate date) throws AbsenceDaoException, DaoConnectionException {
+	public boolean checkStudentAttendanceInDay(LocalDate date) throws AbsenceDaoException, DaoConnectionException, StudentDaoException {
 		return daoFactory.createAbsenceDao().checkStudentAttendanceInDay(student, date);
 	}
 

@@ -28,10 +28,10 @@ public class SchoolClassDaoDatabase implements SchoolClassDao {
 				return new SchoolClass(rs.getString("name"));
 			}
 			else {
-				throw new SchoolClassDaoException();
+				throw new SchoolClassDaoException("");
 			}
 		} catch (SQLException e) {
-			throw new SchoolClassDaoException();
+			throw new SchoolClassDaoException("");
 		}
 	}
 

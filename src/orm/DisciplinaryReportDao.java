@@ -9,9 +9,9 @@ import domainModel.Teacher;
 
 public interface DisciplinaryReportDao {
 
-	void addNewReport(Teacher teacher, Student student, String description, LocalDate date) throws DisciplinaryReportException;
+	void addNewReport(Teacher teacher, Student student, String description, LocalDate date) throws DisciplinaryReportException, StudentDaoException, TeacherDaoException;
 	
-	Iterator<DisciplinaryReport> getDisciplinaryReportsByStudent(Student student) throws DisciplinaryReportException;
+	Iterator<DisciplinaryReport> getDisciplinaryReportsByStudent(Student student) throws DisciplinaryReportException, StudentDaoException;
 
 	void deleteReport(DisciplinaryReport report) throws DisciplinaryReportException;
 

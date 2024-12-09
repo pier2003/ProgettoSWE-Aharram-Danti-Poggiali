@@ -65,7 +65,7 @@ public class TeacherControllerTest_Reports {
 	}
 	
 	@Test
-	public void testGetStudentDisciplinaryReports() throws DisciplinaryReportException, DaoConnectionException {
+	public void testGetStudentDisciplinaryReports() throws DisciplinaryReportException, DaoConnectionException, StudentDaoException {
 		Iterator<DisciplinaryReport> reportsIterator = reports.iterator();
 
 		expect(disciplinaryReportDaoMock.getDisciplinaryReportsByStudent(student)).andReturn(reportsIterator).once();

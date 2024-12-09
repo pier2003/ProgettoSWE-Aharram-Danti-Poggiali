@@ -22,9 +22,9 @@ public class DisciplinaryReportDaoDatabase implements DisciplinaryReportDao {
 	}
 
 	@Override
-	public void addNewReport(Teacher teacher, Student student, String description, LocalDate date) throws DisciplinaryReportException {
-		checkStudentExist(student);
-		checkTeacherExist(teacher);
+	public void addNewReport(Teacher teacher, Student student, String description, LocalDate date) throws DisciplinaryReportException, StudentDaoException, TeacherDaoException {
+		DaoUtils.checkStudentExist(student, conn);
+		DaoUtils.checkTeacherExist(teacher, conn);
 		
 		String query = "INSERT INTO Reports (description, id_student, id_teacher, date) VALUES (?, ?, ?, ?)";
 		
@@ -41,11 +41,11 @@ public class DisciplinaryReportDaoDatabase implements DisciplinaryReportDao {
 
 	@Override
 	public Iterator<DisciplinaryReport> getDisciplinaryReportsByStudent(Student student) 
-	        throws DisciplinaryReportException {
+	        throws DisciplinaryReportException, StudentDaoException {
 	    ArrayList<DisciplinaryReport> reports = new ArrayList<>();
 	    TeacherDaoDatabase teacherDaoDatabase = new TeacherDaoDatabase(conn);
 
-	    checkStudentExist(student);
+	    DaoUtils.checkStudentExist(student, conn);
 
 	    String query = "SELECT id_report, description, id_teacher, date FROM Reports WHERE id_student = ?";
 
@@ -86,25 +86,6 @@ public class DisciplinaryReportDaoDatabase implements DisciplinaryReportDao {
 			throw new DisciplinaryReportException("Database error while deleting report");
 		}
 
-	}
-	
-
-	private void checkStudentExist(Student student) throws DisciplinaryReportException {
-		StudentDaoDatabase studentDaoDatabase = new StudentDaoDatabase(conn);
-		try {
-			studentDaoDatabase.getStudentById(student.getId());
-		} catch (StudentDaoException e) {
-			throw new DisciplinaryReportException("Student doesn't exist.");
-		}
-	}
-	
-	private void checkTeacherExist(Teacher teacher) throws DisciplinaryReportException {
-		TeacherDaoDatabase teacherDaoDatabase = new TeacherDaoDatabase(conn);
-		try {
-			teacherDaoDatabase.getTeacherById(teacher.getId());
-		} catch (TeacherDaoException e) {
-			throw new DisciplinaryReportException("Teacher doesn't exist.");
-		}
 	}
 
 

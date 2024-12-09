@@ -18,7 +18,7 @@ public class TeachingAssignmentDaoDatabase implements TeachingAssignmentDao {
 	public TeachingAssignmentDaoDatabase(Connection conn) {
 		this.conn = conn;
 	}
-
+	
 	@Override
 	public Iterator<TeachingAssignment> getAllStudentTeachings(int id) throws TeachingAssignmentDaoException, DaoConnectionException  {
 		String query = "SELECT id_teaching, subject, id_teacher, class_name "
@@ -37,17 +37,16 @@ public class TeachingAssignmentDaoDatabase implements TeachingAssignmentDao {
 						new SchoolClass(rs.getString("class_name"))));
 			}
 		} catch (SQLException | TeacherDaoException e) {
-			throw new TeachingAssignmentDaoException();
+			throw new TeachingAssignmentDaoException("");
 		}
 		return teachings.iterator();
 	}
 
 
-	@Override
-	public TeachingAssignment getTeachingById(int id) throws TeachingAssignmentDaoException, DaoConnectionException {
+	public TeachingAssignment getTeachingById(int id) throws TeachingAssignmentDaoException {
 		String query = "SELECT id_teaching, subject, id_teacher, class_name FROM Teachings WHERE id_teaching = " + id + ";";
 		try {
-			TeacherDao teacherDao = new TeacherDaoDatabase(conn);
+			TeacherDaoDatabase teacherDao = new TeacherDaoDatabase(conn);
 			ResultSet rs = getResultsFromDB(query);
 			rs.next();
 			return new TeachingAssignment(
@@ -57,11 +56,11 @@ public class TeachingAssignmentDaoDatabase implements TeachingAssignmentDao {
 						new SchoolClass(rs.getString("class_name")));
 			}
 		catch (SQLException | TeacherDaoException e) {
-			throw new TeachingAssignmentDaoException();
+			throw new TeachingAssignmentDaoException("");
 		}
 	}
 
-	private ResultSet getResultsFromDB(String query) throws SQLException, DaoConnectionException {
+	private ResultSet getResultsFromDB(String query) throws SQLException {
 		PreparedStatement stmt = conn.prepareStatement(query);
 		ResultSet rs = stmt.executeQuery();
 		return rs;

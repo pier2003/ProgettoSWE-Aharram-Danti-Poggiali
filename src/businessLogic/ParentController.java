@@ -2,6 +2,7 @@ package businessLogic;
 
 import java.time.LocalDate;
 
+
 import java.util.Iterator;
 
 import daoFactory.DaoFactory;
@@ -23,7 +24,6 @@ import orm.DisciplinaryReportException;
 import orm.GradeDaoException;
 import orm.HomeworkDaoException;
 import orm.LessonDaoException;
-import orm.ParentDao;
 import orm.ParentDaoException;
 import orm.SchoolClassDaoException;
 import orm.StudentDaoException;
@@ -63,21 +63,21 @@ public class ParentController {
 	//GRADES
 	
 	public Iterator<Grade> getGradesByTeaching(TeachingAssignment teaching)
-			throws GradeDaoException, DaoConnectionException {
+			throws GradeDaoException, DaoConnectionException, StudentDaoException, TeachingAssignmentDaoException {
 		return studentController.getGradesByTeaching(teaching);
 	}
 
-	public Iterator<Grade> getAllStudentGrades() throws GradeDaoException, DaoConnectionException {
+	public Iterator<Grade> getAllStudentGrades() throws GradeDaoException, DaoConnectionException, StudentDaoException {
 		return studentController.getAllStudentGrades();
 	}
 	
 	public double calculateTeachingGradeAverage(TeachingAssignment teaching, GradeAverageStrategy gradeAverageStrategy)
-			throws GradeDaoException, DaoConnectionException {
+			throws GradeDaoException, DaoConnectionException, StudentDaoException, TeachingAssignmentDaoException {
 		return studentController.calculateTeachingGradeAverage(teaching, gradeAverageStrategy);
 	}
 
 	public double calculateTotalGradeAverage(GradeAverageStrategy gradeAverageStrategy)
-			throws GradeDaoException, DaoConnectionException {
+			throws GradeDaoException, DaoConnectionException, StudentDaoException {
 		return studentController.calculateTotalGradeAverage(gradeAverageStrategy);
 	}
 	
@@ -85,7 +85,7 @@ public class ParentController {
 	//REPORTS
 
 	public Iterator<DisciplinaryReport> getDisciplinaryReports()
-			throws DisciplinaryReportException, DaoConnectionException {
+			throws DisciplinaryReportException, DaoConnectionException, StudentDaoException {
 		return studentController.getDisciplinaryReports();
 	}
 
@@ -122,7 +122,7 @@ public class ParentController {
 	
 	//ABSENCE
 	
-	public Iterator<Absence> getAllStudentAbsences() throws AbsenceDaoException, DaoConnectionException {
+	public Iterator<Absence> getAllStudentAbsences() throws AbsenceDaoException, DaoConnectionException, StudentDaoException {
 		return studentController.getAllStudentAbsences();
 	}
 
@@ -130,7 +130,7 @@ public class ParentController {
 		daoFactory.createAbsenceDao().justifyAbsence(absence);
 	}
 	
-	public boolean checkStudentAttendanceInDay(LocalDate date) throws AbsenceDaoException, DaoConnectionException {
+	public boolean checkStudentAttendanceInDay(LocalDate date) throws AbsenceDaoException, DaoConnectionException, StudentDaoException {
 		return studentController.checkStudentAttendanceInDay(date);
 	}
 

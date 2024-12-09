@@ -32,11 +32,11 @@ public class StudentDaoDatabase implements StudentDao {
 	                    new SchoolClass(rs.getString("class")) 
 	                );
 	            } else {
-	                throw new StudentDaoException();
+	                throw new StudentDaoException("");
 	            }
 	        }
 	    } catch (SQLException e) {
-	        throw new StudentDaoException();
+	        throw new StudentDaoException("");
 	    }
 	}
 
