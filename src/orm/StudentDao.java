@@ -7,6 +7,6 @@ import domainModel.Student;
 
 public interface StudentDao {
 		
-	Iterator<Student> getStudentsByClass(SchoolClass schoolClass) throws StudentDaoException, DaoConnectionException;
+	Iterator<Student> getStudentsByClass(SchoolClass schoolClass) throws StudentDaoException, DaoConnectionException, SchoolClassDaoException;
 
 }
