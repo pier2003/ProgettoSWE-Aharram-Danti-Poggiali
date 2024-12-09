@@ -2,22 +2,16 @@ package orm;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import domainModel.Absence;
 import domainModel.SchoolClass;
 import domainModel.Student;
 
@@ -72,6 +66,34 @@ public class StudentDaoDatabaseTest {
 		int invalidId = -1;
 		assertThatThrownBy(() -> studentDao.getStudentById(invalidId)).isInstanceOf(StudentDaoException.class);
 	}
+	
+	@Test
+	public void testGetStudentByUsernameAndPassword() throws StudentDaoException {
+	    Student studentFromDb = studentDao.getStudentByUsernameAndPassword("stu001", "pass123");
+	    assertThat(studentFromDb).isEqualTo(student);
+	}
+
+	@Test
+	public void testGetStudentByUsernameAndPassword_withInvalidUsername() {
+	    assertThatThrownBy(() -> studentDao.getStudentByUsernameAndPassword("wrongUser", "pass123"))
+	        .isInstanceOf(StudentDaoException.class)
+	        .hasMessageContaining("Student with username wrongUser doesn't exist.");
+	}
+
+	@Test
+	public void testGetStudentByUsernameAndPassword_withInvalidPassword() {
+	    assertThatThrownBy(() -> studentDao.getStudentByUsernameAndPassword("stu001", "wrongPassword"))
+	        .isInstanceOf(StudentDaoException.class)
+	        .hasMessageContaining("Student with username stu001 doesn't exist.");
+	}
+
+	@Test
+	public void testGetStudentByUsernameAndPassword_withInvalidCredentials() {
+	    assertThatThrownBy(() -> studentDao.getStudentByUsernameAndPassword("wrongUser", "wrongPassword"))
+	        .isInstanceOf(StudentDaoException.class)
+	        .hasMessageContaining("Student with username wrongUser doesn't exist.");
+	}
+
 
 	@Test
 	public void testGetStudentsByClass()

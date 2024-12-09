@@ -5,6 +5,6 @@ import domainModel.Teacher;
 
 public interface TeacherDao {
 	
-	Teacher getTeacherById(int id) throws TeacherDaoException, DaoConnectionException;
+	Teacher getTeacherByUsernameAndPassword(String username, String password) throws TeacherDaoException;
 
 }
