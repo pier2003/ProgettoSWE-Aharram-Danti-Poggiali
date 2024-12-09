@@ -89,7 +89,8 @@ CREATE TABLE IF NOT EXISTS Absences (
 
 CREATE TABLE IF NOT EXISTS MeetingsAvailability (
     date DATE NOT NULL,
-    hour TIME NOT NULL,
+    hour text NOT NULL,
+    isBooked BOOL NOT NULL DEFAULT FALSE,
     id_teacher INT NOT NULL,
     PRIMARY KEY (date, hour, id_teacher),
     FOREIGN KEY (id_teacher) REFERENCES Teachers(id_teacher) ON DELETE CASCADE
@@ -98,7 +99,7 @@ CREATE TABLE IF NOT EXISTS MeetingsAvailability (
 CREATE TABLE IF NOT EXISTS Meetings (
 	id_meeting INT PRIMARY KEY AUTO_INCREMENT,
     date DATE NOT NULL,
-    hour TIME NOT NULL,
+    hour text NOT NULL,
     id_teacher INT NOT NULL,
     id_parent INT NOT NULL,
     FOREIGN KEY (date, hour, id_teacher) REFERENCES MeetingsAvailability(date, hour, id_teacher) ON DELETE CASCADE,
