@@ -17,8 +17,8 @@ public interface LessonDao {
 
 	void editLessonDateTime(Lesson lesson, LocalDate date, LocalTime startHour, LocalTime endHour) throws LessonDaoException, DaoConnectionException;
 
-	Iterator<Lesson> getLessonsInDay(LocalDate date, SchoolClass schoolClass) throws DaoConnectionException, LessonDaoException;
+	Iterator<Lesson> getLessonsInDay(LocalDate date, SchoolClass schoolClass) throws DaoConnectionException, LessonDaoException, SchoolClassDaoException;
 
-	void deleteLesson(Lesson lesson);
+	void deleteLesson(Lesson lesson) throws LessonDaoException;
 
 }
