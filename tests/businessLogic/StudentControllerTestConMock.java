@@ -1,7 +1,6 @@
 package businessLogic;
 
 import static org.assertj.core.api.Assertions.assertThat; 
-
 import static org.easymock.EasyMock.*;
 
 import java.time.LocalDate;
@@ -32,7 +31,6 @@ import orm.HomeworkDao;
 import orm.HomeworkDaoException;
 import orm.LessonDao;
 import orm.LessonDaoException;
-import orm.SchoolClassDao;
 import orm.SchoolClassDaoException;
 import orm.StudentDao;
 import orm.StudentDaoException;
@@ -99,15 +97,6 @@ public class StudentControllerTestConMock {
 		
 		assertThat(studentController.getStudent()).isEqualTo(student);
 	
-		verify(factoryMock);
-	}
-	
-	@Test
-	public void testGetSchool() throws SchoolClassDaoException, DaoConnectionException {
-		replay(factoryMock);
-		
-		assertThat(studentController.getSchoolClass()).isEqualTo(schoolClass);
-		
 		verify(factoryMock);
 	}
 	

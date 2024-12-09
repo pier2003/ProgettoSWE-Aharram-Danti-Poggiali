@@ -38,12 +38,6 @@ public class StudentController {
 		return student;
 	}
 	
-	//CLASS
-	
-	public SchoolClass getSchoolClass() throws SchoolClassDaoException, DaoConnectionException {
-		return student.getSchoolClass();
-	}
-	
 	//TEACHINGS
 	
 	public Iterator<TeachingAssignment> getTeachings() throws TeachingAssignmentDaoException, DaoConnectionException {
