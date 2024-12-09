@@ -41,7 +41,7 @@ public class StudentController {
 	//CLASS
 	
 	public SchoolClass getSchoolClass() throws SchoolClassDaoException, DaoConnectionException {
-		return daoFactory.createSchoolClassDao().getSchoolClassByStudent(student);
+		return student.getSchoolClass();
 	}
 	
 	//TEACHINGS
@@ -78,14 +78,14 @@ public class StudentController {
 	//HOMEWORK
 	
 	public Iterator<Homework> getHomeworksBySubmissionDate(LocalDate date) throws DaoConnectionException, HomeworkDaoException, SchoolClassDaoException {
-		return daoFactory.createHomeworkDao().getHomeworksBySubmissionDate(date, getSchoolClass());
+		return daoFactory.createHomeworkDao().getHomeworksBySubmissionDate(date, student.getSchoolClass());
 	}
 	
 	
 	//LESSON
 	
 	public Iterator<Lesson> getLessonInDate(LocalDate date) throws DaoConnectionException, LessonDaoException, SchoolClassDaoException {
-		return daoFactory.createLessonDao().getLessonsInDay(date, getSchoolClass());
+		return daoFactory.createLessonDao().getLessonsInDay(date, student.getSchoolClass());
 	}
 	
 	

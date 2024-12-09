@@ -43,7 +43,6 @@ public class StudentControllerTestConMock {
 
 	private DaoFactory factoryMock;
 	private StudentDao studentDaoMock;
-	private SchoolClassDao schoolClassDaoMock;
 	private StudentController studentController;
 	private Student student;
 	private SchoolClass schoolClass;
@@ -66,7 +65,6 @@ public class StudentControllerTestConMock {
 	public void setup() throws DaoConnectionException, StudentDaoException, SchoolClassDaoException {
 		factoryMock = createMock(DaoFactory.class);
 		studentDaoMock = createMock(StudentDao.class);
-		schoolClassDaoMock = createMock(SchoolClassDao.class);
 		teachingAssignmentDaoMock = createMock(TeachingAssignmentDao.class);
 		gradeDaoMock = createMock(GradeDao.class);
 		disciplinaryReportDaoMock = createMock(DisciplinaryReportDao.class);
@@ -78,9 +76,7 @@ public class StudentControllerTestConMock {
 		schoolClass = new SchoolClass("1A");
 		student = new Student(studentId, "Mario", "Rossi", schoolClass);
 		
-		expect(schoolClassDaoMock.getSchoolClassByStudent(student)).andReturn(schoolClass).anyTimes();
 		expect(factoryMock.createStudentDao()).andReturn(studentDaoMock).anyTimes();
-		expect(factoryMock.createSchoolClassDao()).andReturn(schoolClassDaoMock).anyTimes();
 		expect(factoryMock.createTeachingAssignmentDao()).andReturn(teachingAssignmentDaoMock).anyTimes();
 		expect(factoryMock.createGradeDao()).andReturn(gradeDaoMock).anyTimes();
 		expect(factoryMock.createDisciplinaryReportDao()).andReturn(disciplinaryReportDaoMock).anyTimes();
@@ -99,20 +95,20 @@ public class StudentControllerTestConMock {
 	
 	@Test
 	public void testGetStudent() throws StudentDaoException, SchoolClassDaoException, DaoConnectionException {
-		replay(factoryMock, schoolClassDaoMock);
+		replay(factoryMock);
 		
 		assertThat(studentController.getStudent()).isEqualTo(student);
 	
-		verify(factoryMock, schoolClassDaoMock);
+		verify(factoryMock);
 	}
 	
 	@Test
 	public void testGetSchool() throws SchoolClassDaoException, DaoConnectionException {
-		replay(factoryMock, schoolClassDaoMock);
+		replay(factoryMock);
 		
 		assertThat(studentController.getSchoolClass()).isEqualTo(schoolClass);
 		
-		verify(factoryMock, schoolClassDaoMock);
+		verify(factoryMock);
 	}
 	
 	@Test
@@ -197,11 +193,11 @@ public class StudentControllerTestConMock {
 		
 		expect(homeworkDaoMock.getHomeworksBySubmissionDate(date, schoolClass)).andReturn(homeworksIterator).once();
 		
-		replay(factoryMock, homeworkDaoMock, schoolClassDaoMock);
+		replay(factoryMock, homeworkDaoMock);
 		
 		assertThat(studentController.getHomeworksBySubmissionDate(date)).toIterable().containsExactlyInAnyOrder(homework1, homework2);
 		
-		verify(factoryMock, homeworkDaoMock, schoolClassDaoMock);
+		verify(factoryMock, homeworkDaoMock);
 	}
 	
 	@Test
@@ -216,11 +212,11 @@ public class StudentControllerTestConMock {
 		
 		expect(lessonDaoMock.getLessonsInDay(date, schoolClass)).andReturn(lessonsIterator).once();
 		
-		replay(factoryMock, schoolClassDaoMock, lessonDaoMock);
+		replay(factoryMock, lessonDaoMock);
 		
 		assertThat(studentController.getLessonInDate(date)).toIterable().containsExactlyInAnyOrder(lesson1,lesson2);
 		
-		verify(factoryMock, schoolClassDaoMock, lessonDaoMock);
+		verify(factoryMock, lessonDaoMock);
 	}
 
 	@Test
